@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marketing Spend Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1C2B39; --paper:#F6F4EF; --card:#FFFFFF;
+    --line:#DEDACE; --muted:#6B7280; --good:#3E7A5C; --warn:#C77B32; --bad:#B4483A;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);}
+  h1,h2,h3{font-family:'Source Serif 4',serif;margin:0;}
+  header{padding:20px 20px 0;}
+  header h1{font-size:22px;font-weight:700;}
+  header p{color:var(--muted);font-size:13px;margin:4px 0 0;}
+  nav{display:flex;gap:4px;padding:16px 20px 0;border-bottom:1px solid var(--line);}
+  nav button{background:none;border:none;padding:10px 14px;font-size:14px;font-family:'Inter';cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;}
+  nav button.active{color:var(--ink);border-color:var(--good);font-weight:600;}
+  main{padding:20px;max-width:720px;margin:0 auto;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:14px;}
+  label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px;}
+  input,select{width:100%;padding:10px;border:1px solid var(--line);border-radius:7px;font-size:14px;font-family:'Inter';background:var(--paper);}
+  button.primary{margin-top:14px;width:100%;padding:12px;background:var(--ink);color:#fff;border:none;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;}
+  button.secondary{padding:8px 12px;background:none;border:1px solid var(--line);border-radius:7px;font-size:13px;cursor:pointer;}
+  .row{display:flex;justify-content:space-between;align-items:center;}
+  .person-row{padding:12px 0;border-bottom:1px solid var(--line);}
+  .person-row:last-child{border-bottom:none;}
+  .person-name{font-weight:600;font-size:15px;}
+  .bar-bg{background:var(--line);border-radius:6px;height:8px;margin-top:8px;overflow:hidden;}
+  .bar-fill{height:100%;background:var(--good);}
+  .bar-fill.warn{background:var(--warn);}
+  .bar-fill.bad{background:var(--bad);}
+  .stats{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px;}
+  .stats b{color:var(--ink);}
+  .empty{color:var(--muted);font-size:13px;text-align:center;padding:20px 0;}
+  .list-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;}
+  .list-item:last-child{border-bottom:none;}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .25s;pointer-events:none;}
+  .toast.show{opacity:1;}
+  .settings-note{font-size:12px;color:var(--muted);line-height:1.5;}
+  .remove-x{color:var(--bad);cursor:pointer;font-size:13px;background:none;border:none;}
+  #loginScreen{position:fixed;inset:0;background:var(--paper);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px;}
+  #loginScreen .card{width:100%;max-width:320px;text-align:center;}
+  #loginScreen h2{font-size:18px;margin-bottom:4px;}
+  #loginScreen p{color:var(--muted);font-size:13px;margin:0 0 14px;}
+  #loginError{color:var(--bad);font-size:12px;margin-top:8px;min-height:16px;}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="card">
+    <h2>Marketing Spend Tracker</h2>
+    <p>Enter password to continue</p>
+    <input type="password" id="loginPassword" placeholder="Password" autofocus>
+    <button class="primary" onclick="tryLogin()">Enter</button>
+    <div id="loginError"></div>
+  </div>
+</div>
+
+<div id="appWrap" style="display:none">
+
+<header>
+  <h1>Marketing Spend Tracker</h1>
+  <p id="subtitle">Loading…</p>
+</header>
+
+<nav>
+  <button data-tab="dashboard" class="active">Dashboard</button>
+  <button data-tab="entry">Add Entry</button>
+  <button data-tab="admin">Admin</button>
+  <button onclick="logout()" style="margin-left:auto;color:var(--bad);">Logout</button>
+</nav>
+
+<main>
+
+  <section id="tab-dashboard">
+    <div class="card">
+      <label>Month</label>
+      <input type="month" id="monthPicker">
+    </div>
+    <div class="card" id="dashboardList"><div class="empty">Loading…</div></div>
+  </section>
+
+  <section id="tab-entry" style="display:none">
+    <div class="card">
+      <label>Date</label>
+      <input type="date" id="entryDate">
+      <label>Marketing Person</label>
+      <select id="entryPerson"></select>
+      <label>Amount Given (₹)</label>
+      <input type="number" id="entryAmount" placeholder="0">
+      <label>Purpose</label>
+      <input type="text" id="entryPurpose" placeholder="e.g. Local ad printing">
+      <button class="primary" onclick="submitEntry()">Save Entry</button>
+    </div>
+    <div class="card">
+      <h3 style="font-size:14px;margin-bottom:8px;">Recent Entries</h3>
+      <div id="recentEntries"><div class="empty">Loading…</div></div>
+    </div>
+  </section>
+
+  <section id="tab-admin" style="display:none">
+    <div class="card">
+      <h3 style="font-size:14px;margin-bottom:8px;">Marketing Persons</h3>
+      <div id="peopleList"><div class="empty">Loading…</div></div>
+      <label>Add New Person</label>
+      <input type="text" id="newPersonName" placeholder="Full name">
+      <button class="primary" onclick="submitAddPerson()">Add Person</button>
+    </div>
+    <div class="card">
+      <h3 style="font-size:14px;margin-bottom:8px;">Set Monthly Limit</h3>
+      <label>Month</label>
+      <input type="month" id="limitMonth">
+      <label>Marketing Person</label>
+      <select id="limitPerson"></select>
+      <label>Limit (₹)</label>
+      <input type="number" id="limitAmount" placeholder="15000">
+      <button class="primary" onclick="submitLimit()">Save Limit</button>
+    </div>
+  </section>
+
+
+</main>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ---- Fixed config: edit these two lines for your setup ----
+const GAS_URL = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+const APP_PASSWORD = '12345';
+// -------------------------------------------------------------
+
+let DATA = { entries: [], budgets: [], people: [] };
+
+const SESSION_TIMEOUT_MS = 60 * 60 * 1000; // 1 hour
+
+function tryLogin(){
+  const val = document.getElementById('loginPassword').value;
+  if(val === APP_PASSWORD){
+    sessionStorage.setItem('loggedIn', '1');
+    markActivity();
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appWrap').style.display = 'block';
+    loadData();
+  } else {
+    document.getElementById('loginError').textContent = 'Incorrect password';
+  }
+}
+function markActivity(){
+  sessionStorage.setItem('lastActivity', Date.now().toString());
+}
+function logout(){
+  sessionStorage.removeItem('loggedIn');
+  sessionStorage.removeItem('lastActivity');
+  document.getElementById('appWrap').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginPassword').value = '';
+}
+function isSessionValid(){
+  if(sessionStorage.getItem('loggedIn') !== '1') return false;
+  const last = Number(sessionStorage.getItem('lastActivity') || 0);
+  return (Date.now() - last) < SESSION_TIMEOUT_MS;
+}
+['click','keydown','touchstart'].forEach(evt => {
+  document.addEventListener(evt, () => { if(sessionStorage.getItem('loggedIn')==='1') markActivity(); });
+});
+setInterval(() => {
+  if(sessionStorage.getItem('loggedIn') === '1' && !isSessionValid()){
+    logout();
+    toast('Logged out after 1 hour of inactivity');
+  }
+}, 30000);
+
+document.getElementById('loginPassword').addEventListener('keydown', e => {
+  if(e.key === 'Enter') tryLogin();
+});
+if(isSessionValid()){
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appWrap').style.display = 'block';
+}
+
+const today = new Date();
+const ymNow = today.toISOString().slice(0,7);
+document.getElementById('monthPicker').value = ymNow;
+document.getElementById('limitMonth').value = ymNow;
+document.getElementById('entryDate').value = today.toISOString().slice(0,10);
+
+document.querySelectorAll('nav button').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('main section').forEach(s=>s.style.display='none');
+    document.getElementById('tab-'+btn.dataset.tab).style.display='block';
+  };
+});
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+async function api(action, params){
+  if(!GAS_URL || GAS_URL.indexOf('PASTE_YOUR') === 0){ toast('Apps Script URL not set in the code yet'); throw new Error('no url'); }
+  const url = new URL(GAS_URL);
+  url.searchParams.set('action', action);
+  Object.entries(params||{}).forEach(([k,v]) => url.searchParams.set(k, v));
+  const res = await fetch(url.toString());
+  const json = await res.json();
+  if(json.error) throw new Error(json.error);
+  return json;
+}
+
+async function loadData(){
+  if(!GAS_URL || GAS_URL.indexOf('PASTE_YOUR') === 0){
+    document.getElementById('subtitle').textContent = 'Apps Script URL not set — edit GAS_URL near the top of the <script> tag';
+    return;
+  }
+  try{
+    document.getElementById('subtitle').textContent = 'Syncing with Google Sheet…';
+    DATA = await api('getData');
+    document.getElementById('subtitle').textContent = 'Connected to Google Sheet';
+    populatePeopleDropdowns();
+    renderDashboard();
+    renderRecentEntries();
+    renderPeopleList();
+  }catch(e){
+    document.getElementById('subtitle').textContent = 'Connection error: ' + e.message;
+  }
+}
+
+function populatePeopleDropdowns(){
+  ['entryPerson','limitPerson'].forEach(id=>{
+    const sel = document.getElementById(id);
+    sel.innerHTML = DATA.people.map(p=>`<option value="${p}">${p}</option>`).join('') || '<option value="">No people yet</option>';
+  });
+}
+
+function renderDashboard(){
+  const month = document.getElementById('monthPicker').value;
+  const el = document.getElementById('dashboardList');
+  if(!DATA.people.length){ el.innerHTML = '<div class="empty">Add marketing persons in Admin tab first</div>'; return; }
+
+  el.innerHTML = DATA.people.map(person=>{
+    const limitRow = DATA.budgets.find(b=>b.month===month && b.person===person);
+    const limit = limitRow ? limitRow.limit : 0;
+    const used = DATA.entries
+      .filter(e=>e.person===person && e.date && e.date.slice(0,7)===month)
+      .reduce((s,e)=>s+e.amount,0);
+    const remaining = limit - used;
+    const pct = limit>0 ? Math.min(100,(used/limit)*100) : 0;
+    const barClass = pct>=100 ? 'bad' : pct>=80 ? 'warn' : '';
+    return `<div class="person-row">
+      <div class="row"><span class="person-name">${person}</span><span style="font-size:13px;color:var(--muted)">Limit: ₹${limit || '—'}</span></div>
+      <div class="bar-bg"><div class="bar-fill ${barClass}" style="width:${pct}%"></div></div>
+      <div class="stats"><span>Used: <b>₹${used}</b></span><span>Remaining: <b style="color:${remaining<0?'var(--bad)':'var(--ink)'}">₹${remaining}</b></span></div>
+    </div>`;
+  }).join('');
+}
+
+function renderRecentEntries(){
+  const el = document.getElementById('recentEntries');
+  const list = [...DATA.entries].sort((a,b)=> (b.date||'').localeCompare(a.date||'')).slice(0,8);
+  el.innerHTML = list.length ? list.map(e=>
+    `<div class="list-item"><span>${e.date} · ${e.person} · ${e.purpose||'—'}</span><span>₹${e.amount}</span></div>`
+  ).join('') : '<div class="empty">No entries yet</div>';
+}
+
+function renderPeopleList(){
+  const el = document.getElementById('peopleList');
+  el.innerHTML = DATA.people.length ? DATA.people.map(p=>
+    `<div class="person-row row"><span>${p}</span><button class="remove-x" onclick="removePerson('${p}')">Remove</button></div>`
+  ).join('') : '<div class="empty">No marketing persons yet</div>';
+}
+
+async function submitEntry(){
+  const date = document.getElementById('entryDate').value;
+  const person = document.getElementById('entryPerson').value;
+  const amount = document.getElementById('entryAmount').value;
+  const purpose = document.getElementById('entryPurpose').value;
+  if(!date || !person || !amount){ toast('Fill date, person and amount'); return; }
+  await api('addEntry', {date, person, amount, purpose});
+  document.getElementById('entryAmount').value='';
+  document.getElementById('entryPurpose').value='';
+  toast('Entry saved');
+  loadData();
+}
+
+async function submitAddPerson(){
+  const name = document.getElementById('newPersonName').value.trim();
+  if(!name){ toast('Enter a name'); return; }
+  await api('addPerson', {name});
+  document.getElementById('newPersonName').value='';
+  toast('Person added');
+  loadData();
+}
+
+async function removePerson(name){
+  if(!confirm('Remove ' + name + '?')) return;
+  await api('removePerson', {name});
+  toast('Removed');
+  loadData();
+}
+
+async function submitLimit(){
+  const month = document.getElementById('limitMonth').value;
+  const person = document.getElementById('limitPerson').value;
+  const limit = document.getElementById('limitAmount').value;
+  if(!month || !person || !limit){ toast('Fill all fields'); return; }
+  await api('setLimit', {month, person, limit});
+  document.getElementById('limitAmount').value='';
+  toast('Limit saved');
+  loadData();
+}
+
+document.getElementById('monthPicker').addEventListener('change', renderDashboard);
+
+if(isSessionValid()) loadData();
+</script>
+</body>
+  </html>
