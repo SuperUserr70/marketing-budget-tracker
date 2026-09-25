@@ -48,6 +48,15 @@
   #loginScreen h2{font-size:18px;margin-bottom:4px;}
   #loginScreen p{color:var(--muted);font-size:13px;margin:0 0 14px;}
   #loginError{color:var(--bad);font-size:12px;margin-top:8px;min-height:16px;}
+  #confirmOverlay{position:fixed;inset:0;background:rgba(28,43,57,.5);display:none;align-items:center;justify-content:center;z-index:60;padding:20px;}
+  #confirmOverlay.show{display:flex;}
+  #confirmBox{background:var(--card);border-radius:12px;padding:20px;width:100%;max-width:320px;text-align:center;}
+  #confirmBox h3{font-size:16px;margin-bottom:8px;}
+  #confirmBox p{font-size:13px;color:var(--muted);margin:0 0 16px;line-height:1.5;}
+  #confirmBtns{display:flex;gap:10px;}
+  #confirmBtns button{flex:1;padding:11px;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;}
+  #confirmCancelBtn{background:none;border:1px solid var(--line);color:var(--ink);}
+  #confirmOkBtn{background:var(--bad);border:none;color:#fff;}
 </style>
 </head>
 <body>
@@ -127,6 +136,17 @@
 
 </main>
 
+<div id="confirmOverlay">
+  <div id="confirmBox">
+    <h3 id="confirmTitle">Are you sure?</h3>
+    <p id="confirmMessage"></p>
+    <div id="confirmBtns">
+      <button id="confirmCancelBtn" onclick="closeConfirm()">Cancel</button>
+      <button id="confirmOkBtn" onclick="acceptConfirm()">Remove</button>
+    </div>
+  </div>
+</div>
+
 </div>
 
 <div class="toast" id="toast"></div>
@@ -192,9 +212,9 @@ document.getElementById('monthPicker').value = ymNow;
 document.getElementById('limitMonth').value = ymNow;
 document.getElementById('entryDate').value = today.toISOString().slice(0,10);
 
-document.querySelectorAll('nav button').forEach(btn => {
+document.querySelectorAll('nav button[data-tab]').forEach(btn => {
   btn.onclick = () => {
-    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('nav button[data-tab]').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     document.querySelectorAll('main section').forEach(s=>s.style.display='none');
     document.getElementById('tab-'+btn.dataset.tab).style.display='block';
@@ -303,11 +323,29 @@ async function submitAddPerson(){
   loadData();
 }
 
+let confirmAction = null;
+
+function askConfirm(message, onYes){
+  document.getElementById('confirmMessage').textContent = message;
+  confirmAction = onYes;
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+function closeConfirm(){
+  document.getElementById('confirmOverlay').classList.remove('show');
+  confirmAction = null;
+}
+async function acceptConfirm(){
+  const action = confirmAction;
+  closeConfirm();
+  if(action) await action();
+}
+
 async function removePerson(name){
-  if(!confirm('Remove ' + name + '?')) return;
-  await api('removePerson', {name});
-  toast('Removed');
-  loadData();
+  askConfirm(`Remove "${name}"? Their past entries stay in the sheet, but they won't appear as an option for new entries.`, async () => {
+    await api('removePerson', {name});
+    toast('Removed');
+    loadData();
+  });
 }
 
 async function submitLimit(){
@@ -326,4 +364,4 @@ document.getElementById('monthPicker').addEventListener('change', renderDashboar
 if(isSessionValid()) loadData();
 </script>
 </body>
-  </html>
+</html>
