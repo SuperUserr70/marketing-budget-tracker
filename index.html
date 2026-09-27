@@ -4,25 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Marketing Spend Tracker</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
   :root{
-    --ink:#1C2B39;
-    --paper:#F6F4EF;
-    --card:#FFFFFF;
-    --line:#DEDACE;
-    --muted:#6B7280;
-    --good:#3E7A5C;
-    --warn:#C77B32;
-    --bad:#B4483A;
+    --ink:#1C2B39; --paper:#F6F4EF; --card:#FFFFFF;
+    --line:#DEDACE; --muted:#6B7280; --good:#3E7A5C; --warn:#C77B32; --bad:#B4483A;
   }
 
-  *{
-    box-sizing:border-box;
-  }
+  *{box-sizing:border-box;}
 
   body{
     margin:0;
@@ -56,7 +47,6 @@
     gap:4px;
     padding:16px 20px 0;
     border-bottom:1px solid var(--line);
-    overflow-x:auto;
   }
 
   nav button{
@@ -68,7 +58,6 @@
     cursor:pointer;
     color:var(--muted);
     border-bottom:2px solid transparent;
-    white-space:nowrap;
   }
 
   nav button.active{
@@ -98,8 +87,7 @@
     margin:10px 0 4px;
   }
 
-  input,
-  select{
+  input,select{
     width:100%;
     padding:10px;
     border:1px solid var(--line);
@@ -107,13 +95,6 @@
     font-size:14px;
     font-family:'Inter';
     background:var(--paper);
-    color:var(--ink);
-  }
-
-  input:focus,
-  select:focus{
-    outline:none;
-    border-color:var(--good);
   }
 
   button.primary{
@@ -127,11 +108,6 @@
     font-size:14px;
     font-weight:600;
     cursor:pointer;
-  }
-
-  button.primary:disabled{
-    opacity:.6;
-    cursor:not-allowed;
   }
 
   .row{
@@ -179,7 +155,6 @@
     opacity:0;
     transition:opacity .25s;
     pointer-events:none;
-    z-index:100;
   }
 
   .toast.show{
@@ -193,10 +168,6 @@
     background:none;
     border:none;
   }
-
-  /* =========================
-     LOGIN
-     ========================= */
 
   #loginScreen{
     position:fixed;
@@ -233,12 +204,9 @@
     min-height:16px;
   }
 
-  /* =========================
-     OVERLAYS
-     ========================= */
-
   #confirmOverlay,
-  #detailOverlay{
+  #detailOverlay,
+  #previewOverlay{
     position:fixed;
     inset:0;
     background:rgba(28,43,57,.5);
@@ -250,129 +218,60 @@
   }
 
   #confirmOverlay.show,
-  #detailOverlay.show{
+  #detailOverlay.show,
+  #previewOverlay.show{
     display:flex;
   }
-
-  /* =========================
-     CONFIRM ENTRY
-     ========================= */
 
   #confirmBox{
     background:var(--card);
-    border-radius:14px;
+    border-radius:12px;
+    padding:20px;
     width:100%;
-    max-width:430px;
-    max-height:88vh;
-    display:flex;
-    flex-direction:column;
-    overflow:hidden;
+    max-width:320px;
+    text-align:center;
   }
 
-  .confirm-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:18px 20px 14px;
-    border-bottom:1px solid var(--line);
-    flex-shrink:0;
+  #confirmBox h3{
+    font-size:16px;
+    margin-bottom:8px;
   }
 
-  .confirm-header h3{
-    font-size:20px;
-    margin:0;
-  }
-
-  .confirm-close{
-    background:none;
-    border:none;
-    font-size:24px;
-    color:var(--muted);
-    cursor:pointer;
-    padding:0 2px;
-    line-height:1;
-  }
-
-  #confirmDetails{
-    padding:8px 20px;
-    overflow-y:auto;
-    flex:1;
-  }
-
-  .confirm-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:18px;
-    padding:11px 0;
-    border-bottom:1px solid #EEEEEE;
-  }
-
-  .confirm-row:last-child{
-    border-bottom:none;
-  }
-
-  .confirm-label{
-    color:var(--muted);
-    font-size:12px;
-    line-height:1.4;
-    flex:0 0 43%;
-  }
-
-  .confirm-value{
-    color:var(--ink);
+  #confirmBox p{
     font-size:13px;
-    font-weight:500;
-    text-align:right;
-    line-height:1.4;
-    word-break:break-word;
-    flex:1;
+    color:var(--muted);
+    margin:0 0 16px;
+    line-height:1.5;
   }
 
-  .confirm-amount{
-    font-size:18px;
-    font-weight:700;
-  }
-
-  .confirm-actions{
+  #confirmBtns{
     display:flex;
     gap:10px;
-    padding:14px 20px 18px;
-    border-top:1px solid var(--line);
-    flex-shrink:0;
   }
 
-  .confirm-actions button{
+  #confirmBtns button{
     flex:1;
-    padding:12px;
+    padding:11px;
     border-radius:7px;
     font-size:14px;
     font-weight:600;
     cursor:pointer;
   }
 
-  #confirmEditBtn{
-    background:#fff;
+  #confirmCancelBtn{
+    background:none;
     border:1px solid var(--line);
     color:var(--ink);
   }
 
-  #confirmSaveBtn{
-    background:var(--ink);
-    border:1px solid var(--ink);
+  #confirmOkBtn{
+    background:var(--bad);
+    border:none;
     color:#fff;
   }
 
-  #confirmSaveBtn:disabled{
-    opacity:.6;
-    cursor:not-allowed;
-  }
-
-  /* =========================
-     DETAIL
-     ========================= */
-
-  #detailOverlay{
+  #detailOverlay,
+  #previewOverlay{
     align-items:flex-end;
   }
 
@@ -432,505 +331,441 @@
     line-height:1.5;
   }
 
-  /* =========================
-     MOBILE
-     ========================= */
+
+  /* =====================================================
+     ENTRY CONFIRMATION POPUP
+     ===================================================== */
+
+  #previewOverlay{
+    align-items:flex-end;
+    padding:0;
+  }
+
+  #previewBox{
+    background:var(--card);
+    border-radius:16px 16px 0 0;
+    width:100%;
+    max-width:480px;
+    max-height:88vh;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .preview-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 20px 14px;
+    border-bottom:1px solid var(--line);
+    flex-shrink:0;
+  }
+
+  .preview-header h3{
+    font-size:20px;
+  }
+
+  .preview-close{
+    background:none;
+    border:none;
+    color:var(--muted);
+    font-size:23px;
+    cursor:pointer;
+    padding:0;
+    line-height:1;
+  }
+
+  #previewList{
+    overflow-y:auto;
+    padding:8px 20px;
+    flex:1;
+  }
+
+  .preview-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:18px;
+    padding:11px 0;
+    border-bottom:1px solid #EEEEEE;
+  }
+
+  .preview-row:last-child{
+    border-bottom:none;
+  }
+
+  .preview-label{
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.4;
+    flex:0 0 43%;
+  }
+
+  .preview-value{
+    color:var(--ink);
+    font-size:13px;
+    font-weight:500;
+    text-align:right;
+    line-height:1.4;
+    word-break:break-word;
+    flex:1;
+  }
+
+  .preview-amount-row{
+    background:#F7F8F6;
+    margin:4px -8px;
+    padding:13px 8px;
+    border-radius:8px;
+  }
+
+  .preview-amount-row .preview-label{
+    font-weight:600;
+    color:var(--ink);
+  }
+
+  .preview-amount{
+    font-size:18px;
+    font-weight:700;
+    color:var(--ink);
+  }
+
+  .preview-actions{
+    display:flex;
+    gap:10px;
+    padding:14px 20px 18px;
+    border-top:1px solid var(--line);
+    background:var(--card);
+    flex-shrink:0;
+  }
+
+  .preview-actions button{
+    flex:1;
+    padding:12px;
+    border-radius:7px;
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+  }
+
+  #previewEditBtn{
+    background:#fff;
+    border:1px solid var(--line);
+    color:var(--ink);
+  }
+
+  #previewSaveBtn{
+    background:var(--ink);
+    border:1px solid var(--ink);
+    color:#fff;
+  }
+
+  #previewSaveBtn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+  }
 
   @media(max-width:480px){
 
-    main{
-      padding:14px;
-    }
-
-    header{
-      padding:18px 16px 0;
-    }
-
-    nav{
-      padding-left:10px;
-      padding-right:10px;
-    }
-
-    nav button{
-      padding:10px 11px;
-      font-size:13px;
-    }
-
-    #confirmOverlay{
-      padding:12px;
-    }
-
-    #confirmBox{
+    #previewBox{
       max-height:90vh;
     }
 
-    .confirm-header{
+    .preview-header{
       padding:16px;
     }
 
-    #confirmDetails{
+    #previewList{
       padding:6px 16px;
     }
 
-    .confirm-actions{
+    .preview-actions{
       padding:12px 16px 16px;
-    }
-
-    .confirm-label{
-      flex-basis:45%;
     }
   }
 </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 </head>
 
 <body>
 
-<!-- =========================
-     LOGIN
-     ========================= -->
-
 <div id="loginScreen">
-
   <div class="card">
-
     <h2>Marketing Spend Tracker</h2>
-
     <p>Enter password to continue</p>
-
-    <input
-      type="password"
-      id="loginPassword"
-      placeholder="Password"
-      autofocus
-    >
-
-    <button class="primary" onclick="tryLogin()">
-      Enter
-    </button>
-
+    <input type="password" id="loginPassword" placeholder="Password" autofocus>
+    <button class="primary" onclick="tryLogin()">Enter</button>
     <div id="loginError"></div>
-
   </div>
-
 </div>
-
-
-<!-- =========================
-     MAIN APP
-     ========================= -->
 
 <div id="appWrap" style="display:none">
 
-  <header>
+<header>
+  <h1>Marketing Spend Tracker</h1>
+  <p id="subtitle">Loading…</p>
+</header>
 
-    <h1>Marketing Spend Tracker</h1>
+<nav>
+  <button data-tab="dashboard" class="active">Dashboard</button>
+  <button data-tab="entry">Add Entry</button>
+  <button data-tab="admin">Admin</button>
+  <button onclick="logout()" style="margin-left:auto;color:var(--bad);">Logout</button>
+</nav>
 
-    <p id="subtitle">
-      Loading…
-    </p>
+<main>
 
-  </header>
+  <section id="tab-dashboard">
 
+    <div class="card">
 
-  <!-- NAVIGATION -->
+      <label>Month</label>
 
-  <nav>
+      <input
+        type="month"
+        id="monthPicker">
 
-    <button
-      data-tab="dashboard"
-      class="active">
-      Dashboard
-    </button>
+    </div>
 
-    <button
-      data-tab="entry">
-      Add Entry
-    </button>
+    <div
+      class="card"
+      id="dashboardList">
 
-    <button
-      data-tab="admin">
-      Admin
-    </button>
-
-    <button
-      onclick="logout()"
-      style="margin-left:auto;color:var(--bad);">
-      Logout
-    </button>
-
-  </nav>
-
-
-  <main>
-
-    <!-- =========================
-         DASHBOARD
-         ========================= -->
-
-    <section id="tab-dashboard">
-
-      <div class="card">
-
-        <label>
-          Month
-        </label>
-
-        <input
-          type="month"
-          id="monthPicker"
-        >
-
+      <div class="empty">
+        Loading…
       </div>
 
+    </div>
 
-      <div
-        class="card"
-        id="dashboardList">
+    <button
+      class="primary"
+      onclick="downloadExcel()">
+      ⬇ Download Excel (this month)
+    </button>
 
+  </section>
+
+
+  <section id="tab-entry" style="display:none">
+
+    <div class="card">
+
+      <label>Date of Payment</label>
+
+      <input
+        type="date"
+        id="fDate">
+
+      <label>Marketing Person (Type)</label>
+
+      <select id="fPerson"></select>
+
+      <label>Amount (₹)</label>
+
+      <input
+        type="number"
+        id="fAmount"
+        placeholder="0">
+
+      <label>Purpose Of Payment</label>
+
+      <input
+        type="text"
+        id="fPurpose"
+        placeholder="e.g. Advance payment - Nalgonda">
+
+      <label>Account Holder</label>
+
+      <input
+        type="text"
+        id="fAccountHolder"
+        placeholder="e.g. LA EX EDU SERVICES PVT LTD">
+
+      <label>Bank Account No</label>
+
+      <input
+        type="text"
+        id="fBankAccountNo"
+        placeholder="e.g. 50200111954407">
+
+      <label>IFSC Code</label>
+
+      <input
+        type="text"
+        id="fIfsc"
+        placeholder="e.g. HDFC0000472">
+
+      <label>Category</label>
+
+      <input
+        type="text"
+        id="fCategory"
+        placeholder="e.g. Marketing">
+
+      <label>Sub Category</label>
+
+      <input
+        type="text"
+        id="fSubCategory"
+        placeholder="e.g. Individual Marketing">
+
+      <label>Sub Type</label>
+
+      <input
+        type="text"
+        id="fSubType"
+        placeholder="e.g. Travel">
+
+      <label>Branch</label>
+
+      <input
+        type="text"
+        id="fBranch"
+        placeholder="e.g. Mentora">
+
+      <button
+        class="primary"
+        onclick="previewEntry()">
+        Save Entry
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <section id="tab-admin" style="display:none">
+
+    <div class="card">
+
+      <h3 style="font-size:14px;margin-bottom:8px;">
+        Marketing Persons
+      </h3>
+
+      <div id="peopleList">
         <div class="empty">
           Loading…
         </div>
-
       </div>
 
-    </section>
+      <label>Add New Person</label>
 
+      <input
+        type="text"
+        id="newPersonName"
+        placeholder="Full name">
 
-    <!-- =========================
-         ADD ENTRY
-         ========================= -->
+      <button
+        class="primary"
+        onclick="submitAddPerson()">
+        Add Person
+      </button>
 
-    <section
-      id="tab-entry"
-      style="display:none">
+    </div>
 
-      <div class="card">
+  </section>
 
-        <label>
-          Date of Payment
-        </label>
+</main>
 
-        <input
-          type="date"
-          id="fDate"
-        >
 
+<!-- EXISTING REMOVE CONFIRMATION -->
 
-        <label>
-          Marketing Person (Type)
-        </label>
+<div id="confirmOverlay">
 
-        <select id="fPerson"></select>
+  <div id="confirmBox">
 
+    <h3 id="confirmTitle">
+      Are you sure?
+    </h3>
 
-        <label>
-          Amount (₹)
-        </label>
+    <p id="confirmMessage"></p>
 
-        <input
-          type="number"
-          id="fAmount"
-          placeholder="0"
-          min="0"
-        >
+    <div id="confirmBtns">
 
+      <button
+        id="confirmCancelBtn"
+        onclick="closeConfirm()">
+        Cancel
+      </button>
 
-        <label>
-          Purpose Of Payment
-        </label>
-
-        <input
-          type="text"
-          id="fPurpose"
-          placeholder="e.g. Advance payment - Nalgonda"
-        >
-
-
-        <label>
-          Account Holder
-        </label>
-
-        <input
-          type="text"
-          id="fAccountHolder"
-          placeholder="e.g. LA EX EDU SERVICES PVT LTD"
-        >
-
-
-        <label>
-          Bank Account No
-        </label>
-
-        <input
-          type="text"
-          id="fBankAccountNo"
-          placeholder="e.g. 50200111954407"
-        >
-
-
-        <label>
-          IFSC Code
-        </label>
-
-        <input
-          type="text"
-          id="fIfsc"
-          placeholder="e.g. HDFC0000472"
-        >
-
-
-        <label>
-          Category
-        </label>
-
-        <input
-          type="text"
-          id="fCategory"
-          placeholder="e.g. Marketing"
-        >
-
-
-        <label>
-          Sub Category
-        </label>
-
-        <input
-          type="text"
-          id="fSubCategory"
-          placeholder="e.g. Individual Marketing"
-        >
-
-
-        <label>
-          Sub Type
-        </label>
-
-        <input
-          type="text"
-          id="fSubType"
-          placeholder="e.g. Travel"
-        >
-
-
-        <label>
-          Branch
-        </label>
-
-        <input
-          type="text"
-          id="fBranch"
-          placeholder="e.g. Mentora"
-        >
-
-
-        <button
-          class="primary"
-          onclick="submitEntry()">
-          Save Entry
-        </button>
-
-      </div>
-
-    </section>
-
-
-    <!-- =========================
-         ADMIN
-         ========================= -->
-
-    <section
-      id="tab-admin"
-      style="display:none">
-
-      <div class="card">
-
-        <h3
-          style="font-size:14px;margin-bottom:8px;">
-          Marketing Persons
-        </h3>
-
-
-        <div id="peopleList">
-
-          <div class="empty">
-            Loading…
-          </div>
-
-        </div>
-
-
-        <label>
-          Add New Person
-        </label>
-
-        <input
-          type="text"
-          id="newPersonName"
-          placeholder="Full name"
-        >
-
-
-        <button
-          class="primary"
-          onclick="submitAddPerson()">
-          Add Person
-        </button>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <!-- =========================
-       CONFIRM ENTRY OVERLAY
-       ========================= -->
-
-  <div id="confirmOverlay">
-
-    <div id="confirmBox">
-
-      <div class="confirm-header">
-
-        <h3>
-          Confirm Entry
-        </h3>
-
-        <button
-          class="confirm-close"
-          onclick="closeConfirm()"
-          aria-label="Close">
-          ✕
-        </button>
-
-      </div>
-
-
-      <div id="confirmDetails"></div>
-
-
-      <div class="confirm-actions">
-
-        <button
-          id="confirmEditBtn"
-          onclick="closeConfirm()">
-          Edit
-        </button>
-
-        <button
-          id="confirmSaveBtn"
-          onclick="acceptConfirm()">
-          Confirm &amp; Save
-        </button>
-
-      </div>
+      <button
+        id="confirmOkBtn"
+        onclick="acceptConfirm()">
+        Remove
+      </button>
 
     </div>
 
   </div>
 
+</div>
 
-  <!-- =========================
-       REMOVE PERSON CONFIRMATION
-       ========================= -->
 
-  <div id="removeConfirmOverlay"
-       style="
-       position:fixed;
-       inset:0;
-       background:rgba(28,43,57,.5);
-       display:none;
-       align-items:center;
-       justify-content:center;
-       z-index:70;
-       padding:20px;">
+<!-- DETAIL OVERLAY -->
 
-    <div
-      style="
-      background:var(--card);
-      border-radius:12px;
-      padding:20px;
-      width:100%;
-      max-width:340px;">
+<div id="detailOverlay">
 
-      <h3
-        style="font-size:17px;margin-bottom:8px;">
-        Remove Person?
+  <div id="detailBox">
+
+    <div class="row">
+
+      <h3 id="detailName"></h3>
+
+      <button
+        id="detailCloseBtn"
+        onclick="closeDetail()">
+        ✕
+      </button>
+
+    </div>
+
+    <div id="detailSummary"></div>
+
+    <div id="detailEntries"></div>
+
+  </div>
+
+</div>
+
+
+<!-- NEW ENTRY CONFIRMATION -->
+
+<div id="previewOverlay">
+
+  <div id="previewBox">
+
+    <div class="preview-header">
+
+      <h3>
+        Confirm Entry
       </h3>
 
-      <p
-        id="removeConfirmMessage"
-        style="
-        font-size:13px;
-        color:var(--muted);
-        margin:0 0 18px;
-        line-height:1.5;">
-      </p>
-
-      <div
-        style="display:flex;gap:10px;">
-
-        <button
-          onclick="closeRemoveConfirm()"
-          style="
-          flex:1;
-          padding:11px;
-          border-radius:7px;
-          background:#fff;
-          border:1px solid var(--line);
-          font-weight:600;
-          cursor:pointer;">
-          Cancel
-        </button>
-
-        <button
-          id="removeConfirmBtn"
-          onclick="acceptRemoveConfirm()"
-          style="
-          flex:1;
-          padding:11px;
-          border-radius:7px;
-          background:var(--bad);
-          border:none;
-          color:#fff;
-          font-weight:600;
-          cursor:pointer;">
-          Remove
-        </button>
-
-      </div>
+      <button
+        class="preview-close"
+        onclick="closePreview()">
+        ✕
+      </button>
 
     </div>
 
-  </div>
+
+    <div id="previewList"></div>
 
 
-  <!-- =========================
-       DETAIL OVERLAY
-       ========================= -->
+    <div class="preview-actions">
 
-  <div id="detailOverlay">
+      <button
+        id="previewEditBtn"
+        onclick="closePreview()">
+        Edit
+      </button>
 
-    <div id="detailBox">
-
-      <div class="row">
-
-        <h3 id="detailName"></h3>
-
-        <button
-          id="detailCloseBtn"
-          onclick="closeDetail()">
-          ✕
-        </button>
-
-      </div>
-
-
-      <div id="detailSummary"></div>
-
-
-      <div id="detailEntries"></div>
+      <button
+        id="previewSaveBtn"
+        onclick="confirmSubmitEntry()">
+        Confirm &amp; Save
+      </button>
 
     </div>
 
@@ -938,52 +773,39 @@
 
 </div>
 
-
-<!-- TOAST -->
-
-<div
-  class="toast"
-  id="toast">
 </div>
+
+
+<div class="toast" id="toast"></div>
 
 
 <script>
 
-/* =========================================================
-   CONFIGURATION
-   ========================================================= */
-
-const GAS_URL =
-'https://script.google.com/macros/s/AKfycby44BTRR_cFlCYLKcsJ0s2aKkek9fI3qO7FoXRbtf1tUMoWRVSOeWy73xq83XvJTdCXDw/exec';
-
+// ---- Fixed config ----
+const GAS_URL = 'https://script.google.com/macros/s/AKfycby44BTRR_cFlCYLKcsJ0s2aKkek9fI3qO7FoXRbtf1tUMoWRVSOeWy73xq83XvJTdCXDw/exec';
 const APP_PASSWORD = 'admin529';
-
-const SESSION_TIMEOUT_MS =
-60 * 60 * 1000;
-
-
-/* =========================================================
-   GLOBAL DATA
-   ========================================================= */
+const SESSION_TIMEOUT_MS = 60 * 60 * 1000; // 1 hour
+// -----------------------
 
 let DATA = {
   entries: [],
   people: []
 };
 
+let confirmAction = null;
 let pendingEntry = null;
 
-let removeConfirmAction = null;
 
-
-/* =========================================================
+/* =====================================================
    LOGIN
-   ========================================================= */
+   ===================================================== */
 
 function tryLogin(){
 
   const val =
-    document.getElementById('loginPassword').value;
+    document.getElementById(
+      'loginPassword'
+    ).value;
 
   if(val === APP_PASSWORD){
 
@@ -1012,6 +834,7 @@ function tryLogin(){
       'Incorrect password';
 
   }
+
 }
 
 
@@ -1027,9 +850,13 @@ function markActivity(){
 
 function logout(){
 
-  sessionStorage.removeItem('loggedIn');
+  sessionStorage.removeItem(
+    'loggedIn'
+  );
 
-  sessionStorage.removeItem('lastActivity');
+  sessionStorage.removeItem(
+    'lastActivity'
+  );
 
   document.getElementById(
     'appWrap'
@@ -1049,10 +876,13 @@ function logout(){
 function isSessionValid(){
 
   if(
-    sessionStorage.getItem('loggedIn')
-    !== '1'
+    sessionStorage.getItem(
+      'loggedIn'
+    ) !== '1'
   ){
+
     return false;
+
   }
 
   const last =
@@ -1069,7 +899,11 @@ function isSessionValid(){
 }
 
 
-['click','keydown','touchstart'].forEach(
+[
+  'click',
+  'keydown',
+  'touchstart'
+].forEach(
   evt => {
 
     document.addEventListener(
@@ -1118,7 +952,9 @@ setInterval(
 
 
 document
-  .getElementById('loginPassword')
+  .getElementById(
+    'loginPassword'
+  )
   .addEventListener(
     'keydown',
     e => {
@@ -1131,11 +967,25 @@ document
   );
 
 
-/* =========================================================
-   INITIAL DATE
-   ========================================================= */
+if(isSessionValid()){
 
-const today = new Date();
+  document.getElementById(
+    'loginScreen'
+  ).style.display = 'none';
+
+  document.getElementById(
+    'appWrap'
+  ).style.display = 'block';
+
+}
+
+
+/* =====================================================
+   DATE
+   ===================================================== */
+
+const today =
+  new Date();
 
 const ymNow =
   today.toISOString().slice(0,7);
@@ -1150,75 +1000,87 @@ document.getElementById(
   today.toISOString().slice(0,10);
 
 
-/* =========================================================
+/* =====================================================
    NAVIGATION
-   ========================================================= */
+   ===================================================== */
 
 document
   .querySelectorAll(
     'nav button[data-tab]'
   )
-  .forEach(btn => {
+  .forEach(
+    btn => {
 
-    btn.onclick = () => {
+      btn.onclick = () => {
 
-      document
-        .querySelectorAll(
-          'nav button[data-tab]'
-        )
-        .forEach(
-          b =>
-            b.classList.remove(
-              'active'
-            )
+        document
+          .querySelectorAll(
+            'nav button[data-tab]'
+          )
+          .forEach(
+            b =>
+              b.classList.remove(
+                'active'
+              )
+          );
+
+        btn.classList.add(
+          'active'
         );
 
-      btn.classList.add('active');
+        document
+          .querySelectorAll(
+            'main section'
+          )
+          .forEach(
+            s =>
+              s.style.display =
+                'none'
+          );
 
-      document
-        .querySelectorAll(
-          'main section'
-        )
-        .forEach(
-          s =>
-            s.style.display =
-              'none'
-        );
+        document.getElementById(
+          'tab-' +
+          btn.dataset.tab
+        ).style.display =
+          'block';
 
-      document.getElementById(
-        'tab-' + btn.dataset.tab
-      ).style.display = 'block';
+      };
 
-    };
-
-  });
+    }
+  );
 
 
-/* =========================================================
+/* =====================================================
    TOAST
-   ========================================================= */
+   ===================================================== */
 
 function toast(msg){
 
   const t =
-    document.getElementById('toast');
+    document.getElementById(
+      'toast'
+    );
 
   t.textContent = msg;
 
-  t.classList.add('show');
+  t.classList.add(
+    'show'
+  );
 
   setTimeout(
     () =>
-      t.classList.remove('show'),
+      t.classList.remove(
+        'show'
+      ),
     2200
   );
 
 }
 
 
-/* =========================================================
+/* =====================================================
    API
-   ========================================================= */
+   ===================================================== */
 
 async function api(
   action,
@@ -1264,9 +1126,9 @@ async function api(
 }
 
 
-/* =========================================================
+/* =====================================================
    LOAD DATA
-   ========================================================= */
+   ===================================================== */
 
 async function loadData(){
 
@@ -1277,16 +1139,15 @@ async function loadData(){
     ).textContent =
       'Syncing with Google Sheet…';
 
-
     DATA =
-      await api('getData');
-
+      await api(
+        'getData'
+      );
 
     document.getElementById(
       'subtitle'
     ).textContent =
       'Connected to Google Sheet';
-
 
     document.getElementById(
       'fPerson'
@@ -1294,12 +1155,11 @@ async function loadData(){
       DATA.people
         .map(
           p =>
-            `<option value="${escapeHtml(p)}">${escapeHtml(p)}</option>`
+            `<option value="${p}">${p}</option>`
         )
         .join('')
       ||
       '<option value="">No people yet</option>';
-
 
     renderDashboard();
 
@@ -1318,9 +1178,9 @@ async function loadData(){
 }
 
 
-/* =========================================================
+/* =====================================================
    DASHBOARD
-   ========================================================= */
+   ===================================================== */
 
 function renderDashboard(){
 
@@ -1334,7 +1194,6 @@ function renderDashboard(){
       'dashboardList'
     );
 
-
   if(!DATA.people.length){
 
     el.innerHTML =
@@ -1344,10 +1203,9 @@ function renderDashboard(){
 
   }
 
-
   el.innerHTML =
-    DATA.people
-      .map(person => {
+    DATA.people.map(
+      person => {
 
         const used =
           DATA.entries
@@ -1362,24 +1220,23 @@ function renderDashboard(){
             )
             .reduce(
               (s,e) =>
-                s + Number(e.amount || 0),
+                s + e.amount,
               0
             );
-
 
         return `
           <div
             class="person-row"
-            onclick="openDetail('${escapeJs(person)}')">
+            onclick="openDetail('${person}')">
 
             <div class="row">
 
               <span class="person-name">
-                ${escapeHtml(person)}
+                ${person}
               </span>
 
               <span style="font-weight:600;">
-                ₹${used.toLocaleString('en-IN')}
+                ₹${used}
               </span>
 
             </div>
@@ -1387,15 +1244,15 @@ function renderDashboard(){
           </div>
         `;
 
-      })
-      .join('');
+      }
+    ).join('');
 
 }
 
 
-/* =========================================================
-   PERSON DETAIL
-   ========================================================= */
+/* =====================================================
+   DETAIL
+   ===================================================== */
 
 function openDetail(person){
 
@@ -1403,7 +1260,6 @@ function openDetail(person){
     document.getElementById(
       'monthPicker'
     ).value;
-
 
   const list =
     DATA.entries
@@ -1418,37 +1274,32 @@ function openDetail(person){
       )
       .sort(
         (a,b) =>
-          (b.date || '')
+          (b.date||'')
             .localeCompare(
-              a.date || ''
+              a.date||''
             )
       );
-
 
   const total =
     list.reduce(
       (s,e) =>
-        s + Number(e.amount || 0),
+        s + e.amount,
       0
     );
-
 
   document.getElementById(
     'detailName'
   ).textContent =
     person;
 
-
   document.getElementById(
     'detailSummary'
   ).textContent =
-    `${month} · Total given: ₹${total.toLocaleString('en-IN')}`;
-
+    `${month} · Total given: ₹${total}`;
 
   document.getElementById(
     'detailEntries'
   ).innerHTML =
-
     list.length
 
     ?
@@ -1461,35 +1312,36 @@ function openDetail(person){
           <div class="row">
 
             <span class="top">
-              ${escapeHtml(e.date)}
+              ${e.date}
             </span>
 
             <span class="top">
-              ₹${Number(e.amount || 0).toLocaleString('en-IN')}
+              ₹${e.amount}
             </span>
 
           </div>
 
           <div class="meta">
 
-            ${escapeHtml(e.purpose || '—')}
+            ${e.purpose || '—'}
+
             <br>
 
-            ${escapeHtml(e.category || '—')}
+            ${e.category}
             /
-            ${escapeHtml(e.subCategory || '—')}
+            ${e.subCategory}
             ·
-            ${escapeHtml(e.subType || '—')}
+            ${e.subType}
             ·
-            ${escapeHtml(e.branch || '—')}
+            ${e.branch}
 
             <br>
 
-            ${escapeHtml(e.accountHolder || '—')}
+            ${e.accountHolder}
             ·
-            ${escapeHtml(e.bankAccountNo || '—')}
+            ${e.bankAccountNo}
             ·
-            ${escapeHtml(e.ifsc || '—')}
+            ${e.ifsc}
 
           </div>
 
@@ -1502,30 +1354,29 @@ function openDetail(person){
 
     '<div class="empty">No entries for this person this month</div>';
 
-
-  document
-    .getElementById(
-      'detailOverlay'
-    )
-    .classList.add('show');
+  document.getElementById(
+    'detailOverlay'
+  ).classList.add(
+    'show'
+  );
 
 }
 
 
 function closeDetail(){
 
-  document
-    .getElementById(
-      'detailOverlay'
-    )
-    .classList.remove('show');
+  document.getElementById(
+    'detailOverlay'
+  ).classList.remove(
+    'show'
+  );
 
 }
 
 
-/* =========================================================
-   PEOPLE LIST
-   ========================================================= */
+/* =====================================================
+   PEOPLE
+   ===================================================== */
 
 function renderPeopleList(){
 
@@ -1534,9 +1385,7 @@ function renderPeopleList(){
       'peopleList'
     );
 
-
   el.innerHTML =
-
     DATA.people.length
 
     ?
@@ -1549,12 +1398,12 @@ function renderPeopleList(){
           style="cursor:default;">
 
           <span>
-            ${escapeHtml(p)}
+            ${p}
           </span>
 
           <button
             class="remove-x"
-            onclick="removePerson('${escapeJs(p)}')">
+            onclick="removePerson('${p}')">
 
             Remove
 
@@ -1572,11 +1421,11 @@ function renderPeopleList(){
 }
 
 
-/* =========================================================
-   ADD ENTRY
-   ========================================================= */
+/* =====================================================
+   NEW ENTRY CONFIRMATION
+   ===================================================== */
 
-function submitEntry(){
+function previewEntry(){
 
   const payload = {
 
@@ -1639,10 +1488,8 @@ function submitEntry(){
 
 
   if(
-    !payload.date
-    ||
-    !payload.person
-    ||
+    !payload.date ||
+    !payload.person ||
     !payload.amount
   ){
 
@@ -1655,36 +1502,22 @@ function submitEntry(){
   }
 
 
-  if(
-    Number(payload.amount) <= 0
-  ){
-
-    toast(
-      'Amount must be greater than 0'
-    );
-
-    return;
-
-  }
+  pendingEntry =
+    payload;
 
 
-  /* Save temporarily until user confirms */
-
-  pendingEntry = payload;
-
-
-  /* Build confirmation */
-
-  const details = [
+  const fields = [
 
     [
       'Date of Payment',
-      payload.date
+      payload.date,
+      false
     ],
 
     [
       'Marketing Person',
-      payload.person
+      payload.person,
+      false
     ],
 
     [
@@ -1692,109 +1525,130 @@ function submitEntry(){
       '₹' +
       Number(
         payload.amount
-      ).toLocaleString('en-IN'),
+      ).toLocaleString(
+        'en-IN'
+      ),
       true
     ],
 
     [
       'Purpose of Payment',
-      payload.purpose || '—'
+      payload.purpose || '—',
+      false
     ],
 
     [
       'Account Holder',
-      payload.accountHolder || '—'
+      payload.accountHolder || '—',
+      false
     ],
 
     [
       'Bank Account No',
-      payload.bankAccountNo || '—'
+      payload.bankAccountNo || '—',
+      false
     ],
 
     [
       'IFSC Code',
-      payload.ifsc || '—'
+      payload.ifsc || '—',
+      false
     ],
 
     [
       'Category',
-      payload.category || '—'
+      payload.category || '—',
+      false
     ],
 
     [
       'Sub Category',
-      payload.subCategory || '—'
+      payload.subCategory || '—',
+      false
     ],
 
     [
       'Sub Type',
-      payload.subType || '—'
+      payload.subType || '—',
+      false
     ],
 
     [
       'Branch',
-      payload.branch || '—'
+      payload.branch || '—',
+      false
     ]
 
   ];
 
 
   document.getElementById(
-    'confirmDetails'
+    'previewList'
   ).innerHTML =
 
-    details
-      .map(
-        ([label,value,isAmount]) => `
+    fields.map(
+      ([label,value,isAmount]) => `
 
-          <div class="confirm-row">
+        <div
+          class="preview-row
+          ${isAmount ? 'preview-amount-row' : ''}">
 
-            <div class="confirm-label">
-              ${escapeHtml(label)}
-            </div>
+          <div class="preview-label">
+            ${label}
+          </div>
 
-            <div
-              class="confirm-value
-              ${isAmount ? 'confirm-amount' : ''}">
+          <div
+            class="preview-value
+            ${isAmount ? 'preview-amount' : ''}">
 
-              ${escapeHtml(value)}
-
-            </div>
+            ${value}
 
           </div>
 
-        `
-      )
-      .join('');
+        </div>
+
+      `
+    ).join('');
 
 
-  document
-    .getElementById(
-      'confirmOverlay'
-    )
-    .classList.add('show');
+  document.getElementById(
+    'previewOverlay'
+  ).classList.add(
+    'show'
+  );
 
 }
 
 
-/* =========================================================
-   CONFIRM & SAVE
-   ========================================================= */
+/* =====================================================
+   CLOSE PREVIEW / EDIT
+   ===================================================== */
 
-async function acceptConfirm(){
+function closePreview(){
+
+  document.getElementById(
+    'previewOverlay'
+  ).classList.remove(
+    'show'
+  );
+
+}
+
+
+/* =====================================================
+   CONFIRM & SAVE ENTRY
+   ===================================================== */
+
+async function confirmSubmitEntry(){
 
   if(!pendingEntry){
     return;
   }
 
 
-  const payload =
-    pendingEntry;
-
-
   const saveBtn =
     document.getElementById(
-      'confirmSaveBtn'
+      'previewSaveBtn'
     );
 
 
@@ -1808,11 +1662,9 @@ async function acceptConfirm(){
 
     await api(
       'addEntry',
-      payload
+      pendingEntry
     );
 
-
-    /* Clear form */
 
     [
       'fAmount',
@@ -1838,7 +1690,7 @@ async function acceptConfirm(){
     pendingEntry = null;
 
 
-    closeConfirm();
+    closePreview();
 
 
     saveBtn.disabled = false;
@@ -1848,38 +1700,11 @@ async function acceptConfirm(){
 
 
     toast(
-      'Entry saved successfully'
+      'Entry saved'
     );
 
 
-    /*
-       IMPORTANT:
-       Reload Google Sheet data before
-       rendering dashboard.
-    */
-
-    await loadData();
-
-
-    /*
-       Go directly to Dashboard
-       after saving.
-    */
-
-    document
-      .querySelector(
-        'nav button[data-tab="dashboard"]'
-      )
-      .click();
-
-
-    /*
-       Explicitly render again after
-       fresh data is loaded.
-    */
-
-    renderDashboard();
-
+    loadData();
 
   }catch(e){
 
@@ -1887,7 +1712,6 @@ async function acceptConfirm(){
 
     saveBtn.textContent =
       'Confirm & Save';
-
 
     toast(
       'Failed to save: ' +
@@ -1899,35 +1723,16 @@ async function acceptConfirm(){
 }
 
 
-/* =========================================================
-   CLOSE ENTRY CONFIRMATION
-   ========================================================= */
-
-function closeConfirm(){
-
-  document
-    .getElementById(
-      'confirmOverlay'
-    )
-    .classList.remove('show');
-
-}
-
-
-/* =========================================================
+/* =====================================================
    ADD PERSON
-   ========================================================= */
+   ===================================================== */
 
 async function submitAddPerson(){
 
   const name =
-    document
-      .getElementById(
-        'newPersonName'
-      )
-      .value
-      .trim();
-
+    document.getElementById(
+      'newPersonName'
+    ).value.trim();
 
   if(!name){
 
@@ -1939,116 +1744,71 @@ async function submitAddPerson(){
 
   }
 
+  await api(
+    'addPerson',
+    {
+      name:name
+    }
+  );
 
-  try{
+  document.getElementById(
+    'newPersonName'
+  ).value='';
 
-    await api(
-      'addPerson',
-      {
-        name:name
-      }
-    );
+  toast(
+    'Person added'
+  );
 
-
-    document
-      .getElementById(
-        'newPersonName'
-      )
-      .value = '';
-
-
-    toast(
-      'Person added'
-    );
-
-
-    await loadData();
-
-
-  }catch(e){
-
-    toast(
-      'Failed to add person: ' +
-      e.message
-    );
-
-  }
+  loadData();
 
 }
 
 
-/* =========================================================
-   REMOVE PERSON
-   ========================================================= */
+/* =====================================================
+   REMOVE PERSON CONFIRMATION
+   ===================================================== */
 
-function removePerson(name){
-
-  removeConfirmAction =
-    async () => {
-
-      try{
-
-        await api(
-          'removePerson',
-          {
-            name:name
-          }
-        );
-
-
-        toast(
-          'Removed'
-        );
-
-
-        await loadData();
-
-
-      }catch(e){
-
-        toast(
-          'Failed to remove: ' +
-          e.message
-        );
-
-      }
-
-    };
-
+function askConfirm(
+  message,
+  onYes
+){
 
   document.getElementById(
-    'removeConfirmMessage'
+    'confirmMessage'
   ).textContent =
+    message;
 
-    `Remove "${name}"? Their past entries will stay in the sheet, but they won't appear as an option for new entries.`;
-
+  confirmAction =
+    onYes;
 
   document.getElementById(
-    'removeConfirmOverlay'
-  ).style.display =
-    'flex';
+    'confirmOverlay'
+  ).classList.add(
+    'show'
+  );
 
 }
 
 
-function closeRemoveConfirm(){
+function closeConfirm(){
 
   document.getElementById(
-    'removeConfirmOverlay'
-  ).style.display =
-    'none';
+    'confirmOverlay'
+  ).classList.remove(
+    'show'
+  );
 
-  removeConfirmAction = null;
+  confirmAction = null;
 
 }
 
 
-async function acceptRemoveConfirm(){
+async function acceptConfirm(){
 
   const action =
-    removeConfirmAction;
+    confirmAction;
 
-  closeRemoveConfirm();
+  closeConfirm();
 
   if(action){
 
@@ -2059,59 +1819,202 @@ async function acceptRemoveConfirm(){
 }
 
 
-/* =========================================================
-   HTML ESCAPING
-   ========================================================= */
+async function removePerson(name){
 
-function escapeHtml(value){
+  askConfirm(
+    `Remove "${name}"? Their past entries stay in the sheet, but they won't appear as an option for new entries.`,
+    async () => {
 
-  return String(value)
-    .replace(
-      /&/g,
-      '&amp;'
-    )
-    .replace(
-      /</g,
-      '&lt;'
-    )
-    .replace(
-      />/g,
-      '&gt;'
-    )
-    .replace(
-      /"/g,
-      '&quot;'
-    )
-    .replace(
-      /'/g,
-      '&#039;'
-    );
+      await api(
+        'removePerson',
+        {
+          name:name
+        }
+      );
+
+      toast(
+        'Removed'
+      );
+
+      loadData();
+
+    }
+  );
 
 }
 
 
-/* =========================================================
-   JAVASCRIPT STRING ESCAPING
-   ========================================================= */
+/* =====================================================
+   EXCEL DOWNLOAD
+   UNCHANGED
+   ===================================================== */
 
-function escapeJs(value){
+function downloadExcel(){
 
-  return String(value)
-    .replace(
-      /\\/g,
-      '\\\\'
-    )
-    .replace(
-      /'/g,
-      "\\'"
+  const month =
+    document.getElementById(
+      'monthPicker'
+    ).value;
+
+  const rows =
+    DATA.entries.filter(
+      e =>
+        e.date &&
+        e.date.slice(0,7)
+          === month
     );
+
+  if(!rows.length){
+
+    toast(
+      'No entries for this month'
+    );
+
+    return;
+
+  }
+
+
+  const header = [
+    'Date of Payment',
+    'Account Holder',
+    'Bank Account No',
+    'Purpose Of Payment',
+    'Category',
+    'Sub Category',
+    'Type',
+    'Sub Type',
+    'Branch',
+    'IFSC Code',
+    'Amount'
+  ];
+
+
+  const data =
+    rows
+      .sort(
+        (a,b) =>
+          (a.date||'')
+            .localeCompare(
+              b.date||''
+            )
+      )
+      .map(
+        e => [
+
+          e.date,
+          e.accountHolder,
+          e.bankAccountNo,
+          e.purpose,
+          e.category,
+          e.subCategory,
+          e.person,
+          e.subType,
+          e.branch,
+          e.ifsc,
+          e.amount
+
+        ]
+      );
+
+
+  const totals = {};
+
+  rows.forEach(
+    e => {
+
+      totals[e.person] =
+        (totals[e.person] || 0)
+        +
+        Number(
+          e.amount || 0
+        );
+
+    }
+  );
+
+
+  const grandTotal =
+    Object.values(
+      totals
+    ).reduce(
+      (a,b) =>
+        a+b,
+      0
+    );
+
+
+  const summaryRows =
+    Object.keys(
+      totals
+    )
+    .sort()
+    .map(
+      p => [
+        p,
+        totals[p]
+      ]
+    );
+
+
+  summaryRows.push(
+    [
+      'TOTAL',
+      grandTotal
+    ]
+  );
+
+
+  const summarySheet =
+    XLSX.utils.aoa_to_sheet(
+      [
+        [
+          'Person',
+          'Total Amount'
+        ],
+        ...summaryRows
+      ]
+    );
+
+
+  const sheet =
+    XLSX.utils.aoa_to_sheet(
+      [
+        header,
+        ...data
+      ]
+    );
+
+
+  const wb =
+    XLSX.utils.book_new();
+
+
+  XLSX.utils.book_append_sheet(
+    wb,
+    summarySheet,
+    'Summary'
+  );
+
+
+  XLSX.utils.book_append_sheet(
+    wb,
+    sheet,
+    month
+  );
+
+
+  XLSX.writeFile(
+    wb,
+    `Marketing_Spend_${month}.xlsx`
+  );
 
 }
 
 
-/* =========================================================
+/* =====================================================
    MONTH CHANGE
-   ========================================================= */
+   ===================================================== */
 
 document
   .getElementById(
@@ -2123,67 +2026,11 @@ document
   );
 
 
-/* =========================================================
-   CLOSE OVERLAYS WHEN CLICKING BACKDROP
-   ========================================================= */
-
-document
-  .getElementById(
-    'confirmOverlay'
-  )
-  .addEventListener(
-    'click',
-    e => {
-
-      if(
-        e.target.id ===
-        'confirmOverlay'
-      ){
-
-        closeConfirm();
-
-      }
-
-    }
-  );
-
-
-document
-  .getElementById(
-    'detailOverlay'
-  )
-  .addEventListener(
-    'click',
-    e => {
-
-      if(
-        e.target.id ===
-        'detailOverlay'
-      ){
-
-        closeDetail();
-
-      }
-
-    }
-  );
-
-
-/* =========================================================
-   START APPLICATION
-   ========================================================= */
+/* =====================================================
+   INITIAL LOAD
+   ===================================================== */
 
 if(isSessionValid()){
-
-  document.getElementById(
-    'loginScreen'
-  ).style.display =
-    'none';
-
-  document.getElementById(
-    'appWrap'
-  ).style.display =
-    'block';
 
   loadData();
 
