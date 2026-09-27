@@ -59,6 +59,7 @@
   .detail-item .top{font-size:14px;font-weight:600;}
   .detail-item .meta{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -94,6 +95,7 @@
       <input type="month" id="monthPicker">
     </div>
     <div class="card" id="dashboardList"><div class="empty">Loading…</div></div>
+    <button class="primary" onclick="downloadExcel()">⬇ Download Excel (this month)</button>
   </section>
 
   <section id="tab-entry" style="display:none">
@@ -348,6 +350,30 @@ async function removePerson(name){
     toast('Removed');
     loadData();
   });
+}
+
+function downloadExcel(){
+  const month = document.getElementById('monthPicker').value;
+  const rows = DATA.entries.filter(e => e.date && e.date.slice(0,7) === month);
+  if(!rows.length){ toast('No entries for this month'); return; }
+
+  const header = ['Date of Payment','Account Holder','Bank Account No','Purpose Of Payment','Category','Sub Category','Type','Sub Type','Branch','IFSC Code','Amount'];
+  const data = rows
+    .sort((a,b)=> (a.date||'').localeCompare(b.date||''))
+    .map(e => [e.date, e.accountHolder, e.bankAccountNo, e.purpose, e.category, e.subCategory, e.person, e.subType, e.branch, e.ifsc, e.amount]);
+
+  const totals = {};
+  rows.forEach(e => { totals[e.person] = (totals[e.person]||0) + Number(e.amount||0); });
+  const grandTotal = Object.values(totals).reduce((a,b)=>a+b, 0);
+  const summaryRows = Object.keys(totals).sort().map(p => [p, totals[p]]);
+  summaryRows.push(['TOTAL', grandTotal]);
+  const summarySheet = XLSX.utils.aoa_to_sheet([['Person','Total Amount'], ...summaryRows]);
+
+  const sheet = XLSX.utils.aoa_to_sheet([header, ...data]);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, summarySheet, 'Summary');
+  XLSX.utils.book_append_sheet(wb, sheet, month);
+  XLSX.writeFile(wb, `Marketing_Spend_${month}.xlsx`);
 }
 
 document.getElementById('monthPicker').addEventListener('change', renderDashboard);
