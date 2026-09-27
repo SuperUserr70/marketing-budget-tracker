@@ -39,8 +39,8 @@
   #loginScreen h2{font-size:18px;margin-bottom:4px;}
   #loginScreen p{color:var(--muted);font-size:13px;margin:0 0 14px;}
   #loginError{color:var(--bad);font-size:12px;margin-top:8px;min-height:16px;}
-  #confirmOverlay,#detailOverlay{position:fixed;inset:0;background:rgba(28,43,57,.5);display:none;align-items:center;justify-content:center;z-index:60;padding:20px;}
-  #confirmOverlay.show,#detailOverlay.show{display:flex;}
+  #confirmOverlay,#detailOverlay,#previewOverlay{position:fixed;inset:0;background:rgba(28,43,57,.5);display:none;align-items:center;justify-content:center;z-index:60;padding:20px;}
+  #confirmOverlay.show,#detailOverlay.show,#previewOverlay.show{display:flex;}
   #confirmBox{background:var(--card);border-radius:12px;padding:20px;width:100%;max-width:320px;text-align:center;}
   #confirmBox h3{font-size:16px;margin-bottom:8px;}
   #confirmBox p{font-size:13px;color:var(--muted);margin:0 0 16px;line-height:1.5;}
@@ -48,7 +48,7 @@
   #confirmBtns button{flex:1;padding:11px;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;}
   #confirmCancelBtn{background:none;border:1px solid var(--line);color:var(--ink);}
   #confirmOkBtn{background:var(--bad);border:none;color:#fff;}
-  #detailOverlay{align-items:flex-end;}
+  #detailOverlay,#previewOverlay{align-items:flex-end;}
   #detailBox{background:var(--card);border-radius:14px 14px 0 0;padding:18px;width:100%;max-width:480px;max-height:82vh;display:flex;flex-direction:column;}
   #detailBox h3{font-size:17px;}
   #detailCloseBtn{background:none;border:none;font-size:20px;color:var(--muted);cursor:pointer;line-height:1;}
@@ -122,7 +122,7 @@
       <input type="text" id="fSubType" placeholder="e.g. Travel">
       <label>Branch</label>
       <input type="text" id="fBranch" placeholder="e.g. Mentora">
-      <button class="primary" onclick="submitEntry()">Save Entry</button>
+      <button class="primary" onclick="previewEntry()">Save Entry</button>
     </div>
   </section>
 
@@ -160,6 +160,20 @@
   </div>
 </div>
 
+<div id="previewOverlay">
+  <div id="detailBox">
+    <div class="row">
+      <h3>Confirm Entry</h3>
+      <button id="detailCloseBtn" onclick="closePreview()">✕</button>
+    </div>
+    <div id="previewList"></div>
+    <div class="row" style="gap:10px;margin-top:14px;">
+      <button style="flex:1;" onclick="closePreview()">Edit</button>
+      <button class="primary" style="flex:1;margin-top:0;" onclick="confirmSubmitEntry()">Confirm & Save</button>
+    </div>
+  </div>
+</div>
+
 </div>
 
 <div class="toast" id="toast"></div>
@@ -173,6 +187,7 @@ const SESSION_TIMEOUT_MS = 60 * 60 * 1000; // 1 hour
 
 let DATA = { entries: [], people: [] };
 let confirmAction = null;
+let pendingEntry = null;
 
 function tryLogin(){
   const val = document.getElementById('loginPassword').value;
@@ -300,7 +315,7 @@ function renderPeopleList(){
   ).join('') : '<div class="empty">No marketing persons yet</div>';
 }
 
-async function submitEntry(){
+function previewEntry(){
   const payload = {
     date: document.getElementById('fDate').value,
     person: document.getElementById('fPerson').value,
@@ -315,8 +330,31 @@ async function submitEntry(){
     branch: document.getElementById('fBranch').value
   };
   if(!payload.date || !payload.person || !payload.amount){ toast('Fill date, person and amount'); return; }
-  await api('addEntry', payload);
+  pendingEntry = payload;
+
+  document.getElementById('previewList').innerHTML = `
+    <div class="detail-item">
+      <div class="row"><span class="top">${payload.date}</span><span class="top">₹${payload.amount}</span></div>
+      <div class="meta">
+        <b>${payload.person}</b><br>
+        ${payload.purpose || '—'}<br>
+        ${payload.category || '—'} / ${payload.subCategory || '—'} · ${payload.subType || '—'} · ${payload.branch || '—'}<br>
+        ${payload.accountHolder || '—'} · ${payload.bankAccountNo || '—'} · ${payload.ifsc || '—'}
+      </div>
+    </div>`;
+  document.getElementById('previewOverlay').classList.add('show');
+}
+
+function closePreview(){
+  document.getElementById('previewOverlay').classList.remove('show');
+}
+
+async function confirmSubmitEntry(){
+  if(!pendingEntry) return;
+  await api('addEntry', pendingEntry);
   ['fAmount','fPurpose','fAccountHolder','fBankAccountNo','fIfsc','fCategory','fSubCategory','fSubType','fBranch'].forEach(id=>document.getElementById(id).value='');
+  pendingEntry = null;
+  closePreview();
   toast('Entry saved');
   loadData();
 }
