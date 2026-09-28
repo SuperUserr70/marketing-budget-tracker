@@ -3,496 +3,96 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Marketing Spend Tracker</title>
+<title>Marketing Payment Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
 <style>
   :root{
     --ink:#1C2B39; --paper:#F6F4EF; --card:#FFFFFF;
     --line:#DEDACE; --muted:#6B7280; --good:#3E7A5C; --warn:#C77B32; --bad:#B4483A;
   }
-
   *{box-sizing:border-box;}
-
-  body{
-    margin:0;
-    font-family:'Inter',sans-serif;
-    background:var(--paper);
-    color:var(--ink);
-  }
-
-  h1,h2,h3{
-    font-family:'Source Serif 4',serif;
-    margin:0;
-  }
-
-  header{
-    padding:20px 20px 0;
-  }
-
-  header h1{
-    font-size:22px;
-    font-weight:700;
-  }
-
-  header p{
-    color:var(--muted);
-    font-size:13px;
-    margin:4px 0 0;
-  }
-
-  nav{
-    display:flex;
-    gap:4px;
-    padding:16px 20px 0;
-    border-bottom:1px solid var(--line);
-  }
-
-  nav button{
-    background:none;
-    border:none;
-    padding:10px 14px;
-    font-size:14px;
-    font-family:'Inter';
-    cursor:pointer;
-    color:var(--muted);
-    border-bottom:2px solid transparent;
-  }
-
-  nav button.active{
-    color:var(--ink);
-    border-color:var(--good);
-    font-weight:600;
-  }
-
-  main{
-    padding:20px;
-    max-width:720px;
-    margin:0 auto;
-  }
-
-  .card{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:10px;
-    padding:16px;
-    margin-bottom:14px;
-  }
-
-  label{
-    display:block;
-    font-size:12px;
-    color:var(--muted);
-    margin:10px 0 4px;
-  }
-
-  input,select{
-    width:100%;
-    padding:10px;
-    border:1px solid var(--line);
-    border-radius:7px;
-    font-size:14px;
-    font-family:'Inter';
-    background:var(--paper);
-  }
-
-  button.primary{
-    margin-top:14px;
-    width:100%;
-    padding:12px;
-    background:var(--ink);
-    color:#fff;
-    border:none;
-    border-radius:7px;
-    font-size:14px;
-    font-weight:600;
-    cursor:pointer;
-  }
-
-  .row{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-  }
-
-  .person-row{
-    padding:14px 0;
-    border-bottom:1px solid var(--line);
-    cursor:pointer;
-  }
-
-  .person-row:last-child{
-    border-bottom:none;
-  }
-
-  .person-row:hover{
-    background:var(--paper);
-  }
-
-  .person-name{
-    font-weight:600;
-    font-size:15px;
-  }
-
-  .empty{
-    color:var(--muted);
-    font-size:13px;
-    text-align:center;
-    padding:20px 0;
-  }
-
-  .toast{
-    position:fixed;
-    bottom:20px;
-    left:50%;
-    transform:translateX(-50%);
-    background:var(--ink);
-    color:#fff;
-    padding:10px 18px;
-    border-radius:8px;
-    font-size:13px;
-    opacity:0;
-    transition:opacity .25s;
-    pointer-events:none;
-  }
-
-  .toast.show{
-    opacity:1;
-  }
-
-  .remove-x{
-    color:var(--bad);
-    cursor:pointer;
-    font-size:13px;
-    background:none;
-    border:none;
-  }
-
-  #loginScreen{
-    position:fixed;
-    inset:0;
-    background:var(--paper);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:50;
-    padding:20px;
-  }
-
-  #loginScreen .card{
-    width:100%;
-    max-width:320px;
-    text-align:center;
-  }
-
-  #loginScreen h2{
-    font-size:18px;
-    margin-bottom:4px;
-  }
-
-  #loginScreen p{
-    color:var(--muted);
-    font-size:13px;
-    margin:0 0 14px;
-  }
-
-  #loginError{
-    color:var(--bad);
-    font-size:12px;
-    margin-top:8px;
-    min-height:16px;
-  }
-
-  #confirmOverlay,
-  #detailOverlay,
-  #previewOverlay{
-    position:fixed;
-    inset:0;
-    background:rgba(28,43,57,.5);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:60;
-    padding:20px;
-  }
-
-  #confirmOverlay.show,
-  #detailOverlay.show,
-  #previewOverlay.show{
-    display:flex;
-  }
-
-  #confirmBox{
-    background:var(--card);
-    border-radius:12px;
-    padding:20px;
-    width:100%;
-    max-width:320px;
-    text-align:center;
-  }
-
-  #confirmBox h3{
-    font-size:16px;
-    margin-bottom:8px;
-  }
-
-  #confirmBox p{
-    font-size:13px;
-    color:var(--muted);
-    margin:0 0 16px;
-    line-height:1.5;
-  }
-
-  #confirmBtns{
-    display:flex;
-    gap:10px;
-  }
-
-  #confirmBtns button{
-    flex:1;
-    padding:11px;
-    border-radius:7px;
-    font-size:14px;
-    font-weight:600;
-    cursor:pointer;
-  }
-
-  #confirmCancelBtn{
-    background:none;
-    border:1px solid var(--line);
-    color:var(--ink);
-  }
-
-  #confirmOkBtn{
-    background:var(--bad);
-    border:none;
-    color:#fff;
-  }
-
-  #detailOverlay,
-  #previewOverlay{
-    align-items:flex-end;
-  }
-
-  #detailBox{
-    background:var(--card);
-    border-radius:14px 14px 0 0;
-    padding:18px;
-    width:100%;
-    max-width:480px;
-    max-height:82vh;
-    display:flex;
-    flex-direction:column;
-  }
-
-  #detailBox h3{
-    font-size:17px;
-  }
-
-  #detailCloseBtn{
-    background:none;
-    border:none;
-    font-size:20px;
-    color:var(--muted);
-    cursor:pointer;
-    line-height:1;
-  }
-
-  #detailSummary{
-    font-size:13px;
-    color:var(--muted);
-    margin-bottom:10px;
-  }
-
-  #detailEntries{
-    overflow-y:auto;
-    flex:1;
-  }
-
-  .detail-item{
-    padding:10px 0;
-    border-bottom:1px solid var(--line);
-  }
-
-  .detail-item:last-child{
-    border-bottom:none;
-  }
-
-  .detail-item .top{
-    font-size:14px;
-    font-weight:600;
-  }
-
-  .detail-item .meta{
-    font-size:12px;
-    color:var(--muted);
-    margin-top:3px;
-    line-height:1.5;
-  }
-
-
-  /* =====================================================
-     ENTRY CONFIRMATION POPUP
-     ===================================================== */
-
-  #previewOverlay{
-    align-items:flex-end;
-    padding:0;
-  }
-
-  #previewBox{
-    background:var(--card);
-    border-radius:16px 16px 0 0;
-    width:100%;
-    max-width:480px;
-    max-height:88vh;
-    display:flex;
-    flex-direction:column;
-    overflow:hidden;
-  }
-
-  .preview-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:18px 20px 14px;
-    border-bottom:1px solid var(--line);
-    flex-shrink:0;
-  }
-
-  .preview-header h3{
-    font-size:20px;
-  }
-
-  .preview-close{
-    background:none;
-    border:none;
-    color:var(--muted);
-    font-size:23px;
-    cursor:pointer;
-    padding:0;
-    line-height:1;
-  }
-
-  #previewList{
-    overflow-y:auto;
-    padding:8px 20px;
-    flex:1;
-  }
-
-  .preview-row{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:18px;
-    padding:11px 0;
-    border-bottom:1px solid #EEEEEE;
-  }
-
-  .preview-row:last-child{
-    border-bottom:none;
-  }
-
-  .preview-label{
-    color:var(--muted);
-    font-size:12px;
-    line-height:1.4;
-    flex:0 0 43%;
-  }
-
-  .preview-value{
-    color:var(--ink);
-    font-size:13px;
-    font-weight:500;
-    text-align:right;
-    line-height:1.4;
-    word-break:break-word;
-    flex:1;
-  }
-
-  .preview-amount-row{
-    background:#F7F8F6;
-    margin:4px -8px;
-    padding:13px 8px;
-    border-radius:8px;
-  }
-
-  .preview-amount-row .preview-label{
-    font-weight:600;
-    color:var(--ink);
-  }
-
-  .preview-amount{
-    font-size:18px;
-    font-weight:700;
-    color:var(--ink);
-  }
-
-  .preview-actions{
-    display:flex;
-    gap:10px;
-    padding:14px 20px 18px;
-    border-top:1px solid var(--line);
-    background:var(--card);
-    flex-shrink:0;
-  }
-
-  .preview-actions button{
-    flex:1;
-    padding:12px;
-    border-radius:7px;
-    font-size:14px;
-    font-weight:600;
-    cursor:pointer;
-  }
-
-  #previewEditBtn{
-    background:#fff;
-    border:1px solid var(--line);
-    color:var(--ink);
-  }
-
-  #previewSaveBtn{
-    background:var(--ink);
-    border:1px solid var(--ink);
-    color:#fff;
-  }
-
-  #previewSaveBtn:disabled{
-    opacity:.6;
-    cursor:not-allowed;
-  }
-
-  @media(max-width:480px){
-
-    #previewBox{
-      max-height:90vh;
-    }
-
-    .preview-header{
-      padding:16px;
-    }
-
-    #previewList{
-      padding:6px 16px;
-    }
-
-    .preview-actions{
-      padding:12px 16px 16px;
-    }
+  body{margin:0;font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);}
+  h1,h2,h3{font-family:'Source Serif 4',serif;margin:0;}
+  header{padding:20px 20px 0;}
+  header h1{font-size:22px;font-weight:700;}
+  header p{color:var(--muted);font-size:13px;margin:4px 0 0;}
+  nav{display:flex;gap:4px;padding:16px 20px 0;border-bottom:1px solid var(--line);overflow-x:auto;}
+  nav button{white-space:nowrap;background:none;border:none;padding:10px 14px;font-size:14px;font-family:'Inter';cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;}
+  nav button.active{color:var(--ink);border-color:var(--good);font-weight:600;}
+  main{padding:20px;max-width:900px;margin:0 auto;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:14px;}
+  label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px;}
+  input,select{width:100%;padding:10px;border:1px solid var(--line);border-radius:7px;font-size:14px;font-family:'Inter';background:var(--paper);}
+  button.primary{margin-top:14px;width:100%;padding:12px;background:var(--ink);color:#fff;border:none;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;}
+  button.secondary{padding:8px 12px;background:none;border:1px solid var(--line);border-radius:7px;font-size:13px;cursor:pointer;}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:10px;}
+  .person-row{padding:12px 0;border-bottom:1px solid var(--line);}
+  .person-row:last-child{border-bottom:none;}
+  .person-row.clickable{cursor:pointer;}
+  .person-row.clickable:hover{background:var(--paper);}
+  .person-name{font-weight:600;font-size:15px;}
+  .stats{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px;}
+  .stats b{color:var(--ink);}
+  .empty{color:var(--muted);font-size:13px;text-align:center;padding:20px 0;}
+  .list-item{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;}
+  .list-item:last-child{border-bottom:none;}
+  .list-item .meta{color:var(--muted);}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:8px;font-size:13px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:100;}
+  .toast.show{opacity:1;}
+  .remove-x{color:var(--bad);cursor:pointer;font-size:13px;background:none;border:none;}
+  #loginScreen{position:fixed;inset:0;background:var(--paper);display:flex;align-items:center;justify-content:center;z-index:50;padding:20px;}
+  #loginScreen .card{width:100%;max-width:320px;text-align:center;}
+  #loginScreen h2{font-size:18px;margin-bottom:4px;}
+  #loginScreen p{color:var(--muted);font-size:13px;margin:0 0 14px;}
+  #loginError{color:var(--bad);font-size:12px;margin-top:8px;min-height:16px;}
+  #confirmOverlay{position:fixed;inset:0;background:rgba(28,43,57,.5);display:none;align-items:center;justify-content:center;z-index:60;padding:20px;}
+  #confirmOverlay.show{display:flex;}
+  #confirmBox{background:var(--card);border-radius:12px;padding:20px;width:100%;max-width:320px;text-align:center;}
+  #confirmBox h3{font-size:16px;margin-bottom:8px;}
+  #confirmBox p{font-size:13px;color:var(--muted);margin:0 0 16px;line-height:1.5;}
+  #confirmBtns{display:flex;gap:10px;}
+  #confirmBtns button{flex:1;padding:11px;border-radius:7px;font-size:14px;font-weight:600;cursor:pointer;}
+  #confirmCancelBtn{background:none;border:1px solid var(--line);color:var(--ink);}
+  #confirmOkBtn{background:var(--bad);border:none;color:#fff;}
+  #detailOverlay{position:fixed;inset:0;background:rgba(28,43,57,.5);display:none;align-items:flex-end;justify-content:center;z-index:60;}
+  #detailOverlay.show{display:flex;}
+  #detailBox{background:var(--card);border-radius:14px 14px 0 0;padding:18px;width:100%;max-width:560px;max-height:85vh;display:flex;flex-direction:column;}
+  #detailBox .row{margin-bottom:4px;}
+  #detailBox h3{font-size:17px;}
+  #detailCloseBtn{background:none;border:none;font-size:20px;color:var(--muted);cursor:pointer;line-height:1;}
+  #detailSummary{font-size:13px;color:var(--muted);margin-bottom:10px;}
+  #detailEntries{overflow-y:auto;flex:1;}
+  .detail-item{padding:10px 0;border-bottom:1px solid var(--line);}
+  .detail-item:last-child{border-bottom:none;}
+  .detail-item .row{font-size:14px;font-weight:600;}
+  .detail-item .purpose{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4;}
+  .detail-item .bank{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.4;}
+  .summary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  .summary-box{border:1px solid var(--line);border-radius:8px;padding:12px;background:var(--paper);}
+  .summary-box .label{margin:0 0 4px;font-size:11px;}
+  .summary-box .value{font-size:18px;font-weight:700;}
+  .admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .admin-grid .card{margin-bottom:0;}
+  .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;}
+  .monthly-total-row{display:flex;justify-content:space-between;align-items:center;padding:12px 4px;border-bottom:1px solid var(--line);cursor:pointer;font-size:14px;}
+  .monthly-total-row:last-child{border-bottom:none;}
+  .monthly-total-row strong{font-size:15px;}
+  .monthly-total-row.selected{background:var(--paper);border-radius:7px;padding-left:10px;padding-right:10px;}
+  .monthly-total-row.selected span{font-weight:600;}
+  @media(max-width:650px){
+    .admin-grid{grid-template-columns:1fr;}
+    .field-grid{grid-template-columns:1fr;}
+    .summary-grid{grid-template-columns:1fr 1fr;}
+    main{padding:14px;}
   }
 </style>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
 </head>
-
 <body>
 
 <div id="loginScreen">
   <div class="card">
-    <h2>Marketing Spend Tracker</h2>
+    <h2>Marketing Payment Tracker</h2>
     <p>Enter password to continue</p>
     <input type="password" id="loginPassword" placeholder="Password" autofocus>
     <button class="primary" onclick="tryLogin()">Enter</button>
@@ -503,1540 +103,645 @@
 <div id="appWrap" style="display:none">
 
 <header>
-  <h1>Marketing Spend Tracker</h1>
+  <h1>Marketing Payment Tracker</h1>
   <p id="subtitle">Loading…</p>
 </header>
 
 <nav>
   <button data-tab="dashboard" class="active">Dashboard</button>
-  <button data-tab="entry">Add Entry</button>
-  <button data-tab="admin">Admin</button>
+  <button data-tab="entry">Add Payment</button>
+  <button data-tab="admin">Add Type (Marketing Person)</button>
   <button onclick="logout()" style="margin-left:auto;color:var(--bad);">Logout</button>
 </nav>
 
 <main>
 
+  <!-- DASHBOARD -->
   <section id="tab-dashboard">
-
     <div class="card">
-
-      <label>Month</label>
-
-      <input
-        type="month"
-        id="monthPicker">
-
-    </div>
-
-    <div
-      class="card"
-      id="dashboardList">
-
-      <div class="empty">
-        Loading…
+      <div class="row">
+        <div style="flex:1;">
+          <label>Month</label>
+          <input type="month" id="monthPicker">
+        </div>
       </div>
-
     </div>
 
-    <button
-      class="primary"
-      onclick="downloadExcel()">
-      ⬇ Download Excel (this month)
-    </button>
+    <div class="summary-grid" id="monthSummary" style="margin-bottom:14px;"></div>
 
+    <div class="card" id="monthlyTotalsCard" style="margin-bottom:14px;">
+      <div class="row" style="margin-bottom:10px;">
+        <h3 style="font-size:15px;">Monthly Total Spent</h3>
+        <span style="font-size:12px;color:var(--muted);">All recorded payments</span>
+      </div>
+      <div id="monthlyTotalsList"><div class="empty">Loading…</div></div>
+    </div>
+
+    <div class="card" id="dashboardList">
+      <div class="empty">Loading…</div>
+    </div>
   </section>
 
-
+  <!-- ENTRY -->
   <section id="tab-entry" style="display:none">
-
     <div class="card">
+      <h3 style="font-size:16px;margin-bottom:8px;">Add Payment</h3>
 
-      <label>Date of Payment</label>
+      <div class="field-grid">
+        <div>
+          <label>Date of Payment</label>
+          <input type="date" id="entryDate">
+        </div>
 
-      <input
-        type="date"
-        id="fDate">
+        <div>
+          <label>Marketing Person (Type)</label>
+          <select id="entryPerson"></select>
+        </div>
 
-      <label>Marketing Person (Type)</label>
+        <div>
+          <label>Account Holder</label>
+          <input type="text" id="entryAccountHolder" placeholder="e.g. LA EX EDU SERVICES PVT LTD- PROJECT BV">
+        </div>
 
-      <select id="fPerson"></select>
+        <div>
+          <label>Bank Account No</label>
+          <input type="text" id="entryBankAccountNo" placeholder="Account number">
+        </div>
 
-      <label>Amount (₹)</label>
+        <div>
+          <label>IFSC Code</label>
+          <input type="text" id="entryIfscCode" placeholder="e.g. HDFC0000472">
+        </div>
 
-      <input
-        type="number"
-        id="fAmount"
-        placeholder="0">
+        <div>
+          <label>Amount (₹)</label>
+          <input type="number" id="entryAmount" placeholder="0" min="0.01" step="0.01">
+        </div>
 
-      <label>Purpose Of Payment</label>
+        <div>
+          <label>Category</label>
+          <input type="text" id="entryCategory" placeholder="e.g. Marketing">
+        </div>
 
-      <input
-        type="text"
-        id="fPurpose"
-        placeholder="e.g. Advance payment - Nalgonda">
+        <div>
+          <label>Sub Category</label>
+          <input type="text" id="entrySubCategory" placeholder="e.g. Individual Marketing">
+        </div>
 
-      <label>Account Holder</label>
+        <div>
+          <label>Sub Type</label>
+          <input type="text" id="entrySubType" placeholder="e.g. Travel">
+        </div>
 
-      <input
-        type="text"
-        id="fAccountHolder"
-        placeholder="e.g. LA EX EDU SERVICES PVT LTD">
-
-      <label>Bank Account No</label>
-
-      <input
-        type="text"
-        id="fBankAccountNo"
-        placeholder="e.g. 50200111954407">
-
-      <label>IFSC Code</label>
-
-      <input
-        type="text"
-        id="fIfsc"
-        placeholder="e.g. HDFC0000472">
-
-      <label>Category</label>
-
-      <input
-        type="text"
-        id="fCategory"
-        placeholder="e.g. Marketing">
-
-      <label>Sub Category</label>
-
-      <input
-        type="text"
-        id="fSubCategory"
-        placeholder="e.g. Individual Marketing">
-
-      <label>Sub Type</label>
-
-      <input
-        type="text"
-        id="fSubType"
-        placeholder="e.g. Travel">
-
-      <label>Branch</label>
-
-      <input
-        type="text"
-        id="fBranch"
-        placeholder="e.g. Mentora">
-
-      <button
-        class="primary"
-        onclick="previewEntry()">
-        Save Entry
-      </button>
-
-    </div>
-
-  </section>
-
-
-  <section id="tab-admin" style="display:none">
-
-    <div class="card">
-
-      <h3 style="font-size:14px;margin-bottom:8px;">
-        Marketing Persons
-      </h3>
-
-      <div id="peopleList">
-        <div class="empty">
-          Loading…
+        <div>
+          <label>Branch</label>
+          <input type="text" id="entryBranch" placeholder="e.g. Mentora">
         </div>
       </div>
 
-      <label>Add New Person</label>
+      <label>Purpose Of Payment</label>
+      <input type="text" id="entryPurpose" placeholder="e.g. Marketing person advance payment - Nalgonda">
 
-      <input
-        type="text"
-        id="newPersonName"
-        placeholder="Full name">
-
-      <button
-        class="primary"
-        onclick="submitAddPerson()">
-        Add Person
-      </button>
-
+      <button class="primary" onclick="submitEntry()">Save Payment</button>
     </div>
 
+    <div class="card">
+      <h3 style="font-size:14px;margin-bottom:8px;">Recent Payments</h3>
+      <div id="recentEntries"><div class="empty">Loading…</div></div>
+    </div>
+  </section>
+
+  <!-- ADD TYPE -->
+  <section id="tab-admin">
+    <div class="admin-grid">
+
+      <div class="card">
+        <h3 style="font-size:14px;margin-bottom:8px;">Add Type (Marketing Person)</h3>
+        <div id="peopleList"><div class="empty">Loading…</div></div>
+        <label>Add Marketing Person</label>
+        <input type="text" id="newPersonName" placeholder="Full name">
+        <button class="primary" onclick="submitAddPerson()">Add Person</button>
+      </div>
+
+    </div>
   </section>
 
 </main>
 
-
-<!-- EXISTING REMOVE CONFIRMATION -->
-
 <div id="confirmOverlay">
-
   <div id="confirmBox">
-
-    <h3 id="confirmTitle">
-      Are you sure?
-    </h3>
-
+    <h3 id="confirmTitle">Are you sure?</h3>
     <p id="confirmMessage"></p>
-
     <div id="confirmBtns">
-
-      <button
-        id="confirmCancelBtn"
-        onclick="closeConfirm()">
-        Cancel
-      </button>
-
-      <button
-        id="confirmOkBtn"
-        onclick="acceptConfirm()">
-        Remove
-      </button>
-
+      <button id="confirmCancelBtn" onclick="closeConfirm()">Cancel</button>
+      <button id="confirmOkBtn" onclick="acceptConfirm()">Remove</button>
     </div>
-
   </div>
-
 </div>
-
-
-<!-- DETAIL OVERLAY -->
 
 <div id="detailOverlay">
-
   <div id="detailBox">
-
     <div class="row">
-
       <h3 id="detailName"></h3>
-
-      <button
-        id="detailCloseBtn"
-        onclick="closeDetail()">
-        ✕
-      </button>
-
+      <button id="detailCloseBtn" onclick="closeDetail()">✕</button>
     </div>
-
     <div id="detailSummary"></div>
-
     <div id="detailEntries"></div>
-
   </div>
-
-</div>
-
-
-<!-- NEW ENTRY CONFIRMATION -->
-
-<div id="previewOverlay">
-
-  <div id="previewBox">
-
-    <div class="preview-header">
-
-      <h3>
-        Confirm Entry
-      </h3>
-
-      <button
-        class="preview-close"
-        onclick="closePreview()">
-        ✕
-      </button>
-
-    </div>
-
-
-    <div id="previewList"></div>
-
-
-    <div class="preview-actions">
-
-      <button
-        id="previewEditBtn"
-        onclick="closePreview()">
-        Edit
-      </button>
-
-      <button
-        id="previewSaveBtn"
-        onclick="confirmSubmitEntry()">
-        Confirm &amp; Save
-      </button>
-
-    </div>
-
-  </div>
-
 </div>
 
 </div>
-
 
 <div class="toast" id="toast"></div>
 
-
 <script>
-
-// ---- Fixed config ----
+// ---- Fixed config: edit these two lines for your setup ----
 const GAS_URL = 'https://script.google.com/macros/s/AKfycby44BTRR_cFlCYLKcsJ0s2aKkek9fI3qO7FoXRbtf1tUMoWRVSOeWy73xq83XvJTdCXDw/exec';
 const APP_PASSWORD = 'admin529';
-const SESSION_TIMEOUT_MS = 60 * 60 * 1000; // 1 hour
-// -----------------------
+// -------------------------------------------------------------
 
-let DATA = {
-  entries: [],
-  people: []
-};
+let DATA = { entries: [], people: [], subTypes: [], branches: [] };
 
-let confirmAction = null;
-let pendingEntry = null;
-
-
-/* =====================================================
-   LOGIN
-   ===================================================== */
+const SESSION_TIMEOUT_MS = 60 * 60 * 1000;
 
 function tryLogin(){
-
-  const val =
-    document.getElementById(
-      'loginPassword'
-    ).value;
-
+  const val = document.getElementById('loginPassword').value;
   if(val === APP_PASSWORD){
-
-    sessionStorage.setItem(
-      'loggedIn',
-      '1'
-    );
-
+    sessionStorage.setItem('loggedIn', '1');
     markActivity();
-
-    document.getElementById(
-      'loginScreen'
-    ).style.display = 'none';
-
-    document.getElementById(
-      'appWrap'
-    ).style.display = 'block';
-
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appWrap').style.display = 'block';
     loadData();
-
-  }else{
-
-    document.getElementById(
-      'loginError'
-    ).textContent =
-      'Incorrect password';
-
+  } else {
+    document.getElementById('loginError').textContent = 'Incorrect password';
   }
-
 }
-
 
 function markActivity(){
-
-  sessionStorage.setItem(
-    'lastActivity',
-    Date.now().toString()
-  );
-
+  sessionStorage.setItem('lastActivity', Date.now().toString());
 }
-
 
 function logout(){
-
-  sessionStorage.removeItem(
-    'loggedIn'
-  );
-
-  sessionStorage.removeItem(
-    'lastActivity'
-  );
-
-  document.getElementById(
-    'appWrap'
-  ).style.display = 'none';
-
-  document.getElementById(
-    'loginScreen'
-  ).style.display = 'flex';
-
-  document.getElementById(
-    'loginPassword'
-  ).value = '';
-
+  sessionStorage.removeItem('loggedIn');
+  sessionStorage.removeItem('lastActivity');
+  document.getElementById('appWrap').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginPassword').value = '';
 }
-
 
 function isSessionValid(){
-
-  if(
-    sessionStorage.getItem(
-      'loggedIn'
-    ) !== '1'
-  ){
-
-    return false;
-
-  }
-
-  const last =
-    Number(
-      sessionStorage.getItem(
-        'lastActivity'
-      ) || 0
-    );
-
-  return (
-    Date.now() - last
-  ) < SESSION_TIMEOUT_MS;
-
+  if(sessionStorage.getItem('loggedIn') !== '1') return false;
+  const last = Number(sessionStorage.getItem('lastActivity') || 0);
+  return (Date.now() - last) < SESSION_TIMEOUT_MS;
 }
 
+['click','keydown','touchstart'].forEach(evt => {
+  document.addEventListener(evt, () => {
+    if(sessionStorage.getItem('loggedIn') === '1') markActivity();
+  });
+});
 
-[
-  'click',
-  'keydown',
-  'touchstart'
-].forEach(
-  evt => {
-
-    document.addEventListener(
-      evt,
-      () => {
-
-        if(
-          sessionStorage.getItem(
-            'loggedIn'
-          ) === '1'
-        ){
-
-          markActivity();
-
-        }
-
-      }
-    );
-
+setInterval(() => {
+  if(sessionStorage.getItem('loggedIn') === '1' && !isSessionValid()){
+    logout();
+    toast('Logged out after 1 hour of inactivity');
   }
-);
+}, 30000);
 
+document.getElementById('loginPassword').addEventListener('keydown', e => {
+  if(e.key === 'Enter') tryLogin();
+});
 
-setInterval(
-  () => {
+const today = new Date();
+const ymNow = today.toISOString().slice(0,7);
+document.getElementById('monthPicker').value = ymNow;
+document.getElementById('entryDate').value = today.toISOString().slice(0,10);
 
-    if(
-      sessionStorage.getItem(
-        'loggedIn'
-      ) === '1'
-      &&
-      !isSessionValid()
-    ){
-
-      logout();
-
-      toast(
-        'Logged out after 1 hour of inactivity'
-      );
-
-    }
-
-  },
-  30000
-);
-
-
-document
-  .getElementById(
-    'loginPassword'
-  )
-  .addEventListener(
-    'keydown',
-    e => {
-
-      if(e.key === 'Enter'){
-        tryLogin();
-      }
-
-    }
-  );
-
-
-if(isSessionValid()){
-
-  document.getElementById(
-    'loginScreen'
-  ).style.display = 'none';
-
-  document.getElementById(
-    'appWrap'
-  ).style.display = 'block';
-
-}
-
-
-/* =====================================================
-   DATE
-   ===================================================== */
-
-const today =
-  new Date();
-
-const ymNow =
-  today.toISOString().slice(0,7);
-
-document.getElementById(
-  'monthPicker'
-).value = ymNow;
-
-document.getElementById(
-  'fDate'
-).value =
-  today.toISOString().slice(0,10);
-
-
-/* =====================================================
-   NAVIGATION
-   ===================================================== */
-
-document
-  .querySelectorAll(
-    'nav button[data-tab]'
-  )
-  .forEach(
-    btn => {
-
-      btn.onclick = () => {
-
-        document
-          .querySelectorAll(
-            'nav button[data-tab]'
-          )
-          .forEach(
-            b =>
-              b.classList.remove(
-                'active'
-              )
-          );
-
-        btn.classList.add(
-          'active'
-        );
-
-        document
-          .querySelectorAll(
-            'main section'
-          )
-          .forEach(
-            s =>
-              s.style.display =
-                'none'
-          );
-
-        document.getElementById(
-          'tab-' +
-          btn.dataset.tab
-        ).style.display =
-          'block';
-
-      };
-
-    }
-  );
-
-
-/* =====================================================
-   TOAST
-   ===================================================== */
+document.querySelectorAll('nav button[data-tab]').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('nav button[data-tab]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('main section').forEach(s => s.style.display='none');
+    document.getElementById('tab-'+btn.dataset.tab).style.display='block';
+  };
+});
 
 function toast(msg){
-
-  const t =
-    document.getElementById(
-      'toast'
-    );
-
+  const t = document.getElementById('toast');
   t.textContent = msg;
-
-  t.classList.add(
-    'show'
-  );
-
-  setTimeout(
-    () =>
-      t.classList.remove(
-        'show'
-      ),
-    2200
-  );
-
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-
-/* =====================================================
-   API
-   ===================================================== */
-
-async function api(
-  action,
-  params
-){
-
-  const url =
-    new URL(GAS_URL);
-
-  url.searchParams.set(
-    'action',
-    action
-  );
-
-  Object.entries(
-    params || {}
-  ).forEach(
-    ([k,v]) =>
-      url.searchParams.set(
-        k,
-        v
-      )
-  );
-
-  const res =
-    await fetch(
-      url.toString()
-    );
-
-  const json =
-    await res.json();
-
-  if(json.error){
-
-    throw new Error(
-      json.error
-    );
-
+async function api(action, params){
+  if(!GAS_URL || GAS_URL.indexOf('PASTE_YOUR') === 0){
+    toast('Apps Script URL not set');
+    throw new Error('no url');
   }
 
+  const url = new URL(GAS_URL);
+  url.searchParams.set('action', action);
+
+  Object.entries(params || {}).forEach(([k,v]) => {
+    url.searchParams.set(k, v);
+  });
+
+  // Prevent the browser/proxy from returning an older getData response.
+  url.searchParams.set('_ts', Date.now().toString());
+  const res = await fetch(url.toString(), { cache: 'no-store' });
+  if(!res.ok) throw new Error('HTTP ' + res.status);
+  const json = await res.json();
+
+  if(json.error) throw new Error(json.error);
   return json;
-
 }
-
-
-/* =====================================================
-   LOAD DATA
-   ===================================================== */
 
 async function loadData(){
-
   try{
+    document.getElementById('subtitle').textContent = 'Syncing with Google Sheet…';
 
-    document.getElementById(
-      'subtitle'
-    ).textContent =
-      'Syncing with Google Sheet…';
+    DATA = await api('getData');
 
-    DATA =
-      await api(
-        'getData'
-      );
+    document.getElementById('subtitle').textContent =
+      `Connected · ${DATA.entries.length} payment${DATA.entries.length === 1 ? '' : 's'}`;
 
-    document.getElementById(
-      'subtitle'
-    ).textContent =
-      'Connected to Google Sheet';
+    if (DATA.entries.length === 0) {
+      console.warn('Google Sheet returned zero payment entries. Make sure the deployed Apps Script version contains the new Entries-column mapping.');
+    }
 
-    document.getElementById(
-      'fPerson'
-    ).innerHTML =
-      DATA.people
-        .map(
-          p =>
-            `<option value="${p}">${p}</option>`
-        )
-        .join('')
-      ||
-      '<option value="">No people yet</option>';
-
+    populateDropdowns();
     renderDashboard();
-
-    renderPeopleList();
-
+    renderRecentEntries();
+    renderAdminLists();
   }catch(e){
-
-    document.getElementById(
-      'subtitle'
-    ).textContent =
-      'Connection error: ' +
-      e.message;
-
+    document.getElementById('subtitle').textContent = 'Connection error: ' + e.message;
+    toast(e.message);
   }
-
 }
 
+function fillSelect(id, values, emptyText){
+  const sel = document.getElementById(id);
 
-/* =====================================================
-   DASHBOARD
-   ===================================================== */
-
-function renderDashboard(){
-
-  const month =
-    document.getElementById(
-      'monthPicker'
-    ).value;
-
-  const el =
-    document.getElementById(
-      'dashboardList'
-    );
-
-  if(!DATA.people.length){
-
-    el.innerHTML =
-      '<div class="empty">Add marketing persons in Admin tab first</div>';
-
+  if(!values || !values.length){
+    sel.innerHTML = `<option value="">${emptyText}</option>`;
     return;
-
   }
 
-  el.innerHTML =
-    DATA.people.map(
-      person => {
-
-        const used =
-          DATA.entries
-            .filter(
-              e =>
-                e.person === person
-                &&
-                e.date
-                &&
-                e.date.slice(0,7)
-                  === month
-            )
-            .reduce(
-              (s,e) =>
-                s + e.amount,
-              0
-            );
-
-        return `
-          <div
-            class="person-row"
-            onclick="openDetail('${person}')">
-
-            <div class="row">
-
-              <span class="person-name">
-                ${person}
-              </span>
-
-              <span style="font-weight:600;">
-                ₹${used}
-              </span>
-
-            </div>
-
-          </div>
-        `;
-
-      }
+  sel.innerHTML =
+    '<option value="">Select…</option>' +
+    values.map(v =>
+      `<option value="${escapeHtmlAttr(v)}">${escapeHtml(v)}</option>`
     ).join('');
-
 }
 
+function populateDropdowns(){
+  fillSelect('entryPerson', DATA.people, 'No marketing persons');
+}
 
-/* =====================================================
-   DETAIL
-   ===================================================== */
+function escapeHtml(value){
+  return String(value ?? '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
+}
 
-function openDetail(person){
+function escapeHtmlAttr(value){
+  return escapeHtml(value);
+}
 
-  const month =
-    document.getElementById(
-      'monthPicker'
-    ).value;
-
-  const list =
-    DATA.entries
-      .filter(
-        e =>
-          e.person === person
-          &&
-          e.date
-          &&
-          e.date.slice(0,7)
-            === month
-      )
-      .sort(
-        (a,b) =>
-          (b.date||'')
-            .localeCompare(
-              a.date||''
-            )
-      );
-
-  const total =
-    list.reduce(
-      (s,e) =>
-        s + e.amount,
-      0
-    );
-
-  document.getElementById(
-    'detailName'
-  ).textContent =
-    person;
-
-  document.getElementById(
-    'detailSummary'
-  ).textContent =
-    `${month} · Total given: ₹${total}`;
-
-  document.getElementById(
-    'detailEntries'
-  ).innerHTML =
-    list.length
-
-    ?
-
-    list.map(
-      e => `
-
-        <div class="detail-item">
-
-          <div class="row">
-
-            <span class="top">
-              ${e.date}
-            </span>
-
-            <span class="top">
-              ₹${e.amount}
-            </span>
-
-          </div>
-
-          <div class="meta">
-
-            ${e.purpose || '—'}
-
-            <br>
-
-            ${e.category}
-            /
-            ${e.subCategory}
-            ·
-            ${e.subType}
-            ·
-            ${e.branch}
-
-            <br>
-
-            ${e.accountHolder}
-            ·
-            ${e.bankAccountNo}
-            ·
-            ${e.ifsc}
-
-          </div>
-
-        </div>
-
-      `
-    ).join('')
-
-    :
-
-    '<div class="empty">No entries for this person this month</div>';
-
-  document.getElementById(
-    'detailOverlay'
-  ).classList.add(
-    'show'
+function getMonthEntries(month){
+  return DATA.entries.filter(e =>
+    e.date && e.date.slice(0,7) === month
   );
-
 }
 
-
-function closeDetail(){
-
-  document.getElementById(
-    'detailOverlay'
-  ).classList.remove(
-    'show'
-  );
-
-}
-
-
-/* =====================================================
-   PEOPLE
-   ===================================================== */
-
-function renderPeopleList(){
-
-  const el =
-    document.getElementById(
-      'peopleList'
-    );
-
-  el.innerHTML =
-    DATA.people.length
-
-    ?
-
-    DATA.people.map(
-      p => `
-
-        <div
-          class="person-row row"
-          style="cursor:default;">
-
-          <span>
-            ${p}
-          </span>
-
-          <button
-            class="remove-x"
-            onclick="removePerson('${p}')">
-
-            Remove
-
-          </button>
-
-        </div>
-
-      `
-    ).join('')
-
-    :
-
-    '<div class="empty">No marketing persons yet</div>';
-
-}
-
-
-/* =====================================================
-   NEW ENTRY CONFIRMATION
-   ===================================================== */
-
-function previewEntry(){
-
-  const payload = {
-
-    date:
-      document.getElementById(
-        'fDate'
-      ).value,
-
-    person:
-      document.getElementById(
-        'fPerson'
-      ).value,
-
-    amount:
-      document.getElementById(
-        'fAmount'
-      ).value,
-
-    purpose:
-      document.getElementById(
-        'fPurpose'
-      ).value,
-
-    accountHolder:
-      document.getElementById(
-        'fAccountHolder'
-      ).value,
-
-    bankAccountNo:
-      document.getElementById(
-        'fBankAccountNo'
-      ).value,
-
-    ifsc:
-      document.getElementById(
-        'fIfsc'
-      ).value,
-
-    category:
-      document.getElementById(
-        'fCategory'
-      ).value,
-
-    subCategory:
-      document.getElementById(
-        'fSubCategory'
-      ).value,
-
-    subType:
-      document.getElementById(
-        'fSubType'
-      ).value,
-
-    branch:
-      document.getElementById(
-        'fBranch'
-      ).value
-
-  };
-
-
-  if(
-    !payload.date ||
-    !payload.person ||
-    !payload.amount
-  ){
-
-    toast(
-      'Fill date, person and amount'
-    );
-
-    return;
-
-  }
-
-
-  pendingEntry =
-    payload;
-
-
-  const fields = [
-
-    [
-      'Date of Payment',
-      payload.date,
-      false
-    ],
-
-    [
-      'Marketing Person',
-      payload.person,
-      false
-    ],
-
-    [
-      'Amount',
-      '₹' +
-      Number(
-        payload.amount
-      ).toLocaleString(
-        'en-IN'
-      ),
-      true
-    ],
-
-    [
-      'Purpose of Payment',
-      payload.purpose || '—',
-      false
-    ],
-
-    [
-      'Account Holder',
-      payload.accountHolder || '—',
-      false
-    ],
-
-    [
-      'Bank Account No',
-      payload.bankAccountNo || '—',
-      false
-    ],
-
-    [
-      'IFSC Code',
-      payload.ifsc || '—',
-      false
-    ],
-
-    [
-      'Category',
-      payload.category || '—',
-      false
-    ],
-
-    [
-      'Sub Category',
-      payload.subCategory || '—',
-      false
-    ],
-
-    [
-      'Sub Type',
-      payload.subType || '—',
-      false
-    ],
-
-    [
-      'Branch',
-      payload.branch || '—',
-      false
-    ]
-
-  ];
-
-
-  document.getElementById(
-    'previewList'
-  ).innerHTML =
-
-    fields.map(
-      ([label,value,isAmount]) => `
-
-        <div
-          class="preview-row
-          ${isAmount ? 'preview-amount-row' : ''}">
-
-          <div class="preview-label">
-            ${label}
-          </div>
-
-          <div
-            class="preview-value
-            ${isAmount ? 'preview-amount' : ''}">
-
-            ${value}
-
-          </div>
-
-        </div>
-
-      `
-    ).join('');
-
-
-  document.getElementById(
-    'previewOverlay'
-  ).classList.add(
-    'show'
-  );
-
-}
-
-
-/* =====================================================
-   CLOSE PREVIEW / EDIT
-   ===================================================== */
-
-function closePreview(){
-
-  document.getElementById(
-    'previewOverlay'
-  ).classList.remove(
-    'show'
-  );
-
-}
-
-
-/* =====================================================
-   CONFIRM & SAVE ENTRY
-   ===================================================== */
-
-async function confirmSubmitEntry(){
-
-  if(!pendingEntry){
-    return;
-  }
-
-
-  const saveBtn =
-    document.getElementById(
-      'previewSaveBtn'
-    );
-
-
-  saveBtn.disabled = true;
-
-  saveBtn.textContent =
-    'Saving...';
-
-
-  try{
-
-    await api(
-      'addEntry',
-      pendingEntry
-    );
-
-
-    [
-      'fAmount',
-      'fPurpose',
-      'fAccountHolder',
-      'fBankAccountNo',
-      'fIfsc',
-      'fCategory',
-      'fSubCategory',
-      'fSubType',
-      'fBranch'
-    ].forEach(
-      id => {
-
-        document.getElementById(
-          id
-        ).value = '';
-
-      }
-    );
-
-
-    pendingEntry = null;
-
-
-    closePreview();
-
-
-    saveBtn.disabled = false;
-
-    saveBtn.textContent =
-      'Confirm & Save';
-
-
-    toast(
-      'Entry saved'
-    );
-
-
-    loadData();
-
-  }catch(e){
-
-    saveBtn.disabled = false;
-
-    saveBtn.textContent =
-      'Confirm & Save';
-
-    toast(
-      'Failed to save: ' +
-      e.message
-    );
-
-  }
-
-}
-
-
-/* =====================================================
-   ADD PERSON
-   ===================================================== */
-
-async function submitAddPerson(){
-
-  const name =
-    document.getElementById(
-      'newPersonName'
-    ).value.trim();
-
-  if(!name){
-
-    toast(
-      'Enter a name'
-    );
-
-    return;
-
-  }
-
-  await api(
-    'addPerson',
-    {
-      name:name
-    }
-  );
-
-  document.getElementById(
-    'newPersonName'
-  ).value='';
-
-  toast(
-    'Person added'
-  );
-
-  loadData();
-
-}
-
-
-/* =====================================================
-   REMOVE PERSON CONFIRMATION
-   ===================================================== */
-
-function askConfirm(
-  message,
-  onYes
-){
-
-  document.getElementById(
-    'confirmMessage'
-  ).textContent =
-    message;
-
-  confirmAction =
-    onYes;
-
-  document.getElementById(
-    'confirmOverlay'
-  ).classList.add(
-    'show'
-  );
-
-}
-
-
-function closeConfirm(){
-
-  document.getElementById(
-    'confirmOverlay'
-  ).classList.remove(
-    'show'
-  );
-
-  confirmAction = null;
-
-}
-
-
-async function acceptConfirm(){
-
-  const action =
-    confirmAction;
-
-  closeConfirm();
-
-  if(action){
-
-    await action();
-
-  }
-
-}
-
-
-async function removePerson(name){
-
-  askConfirm(
-    `Remove "${name}"? Their past entries stay in the sheet, but they won't appear as an option for new entries.`,
-    async () => {
-
-      await api(
-        'removePerson',
-        {
-          name:name
-        }
-      );
-
-      toast(
-        'Removed'
-      );
-
-      loadData();
-
-    }
-  );
-
-}
-
-
-/* =====================================================
-   EXCEL DOWNLOAD
-   UNCHANGED
-   ===================================================== */
-
-function downloadExcel(){
-
-  const month =
-    document.getElementById(
-      'monthPicker'
-    ).value;
-
-  const rows =
-    DATA.entries.filter(
-      e =>
-        e.date &&
-        e.date.slice(0,7)
-          === month
-    );
-
-  if(!rows.length){
-
-    toast(
-      'No entries for this month'
-    );
-
-    return;
-
-  }
-
-
-  const header = [
-    'Date of Payment',
-    'Account Holder',
-    'Bank Account No',
-    'Purpose Of Payment',
-    'Category',
-    'Sub Category',
-    'Type',
-    'Sub Type',
-    'Branch',
-    'IFSC Code',
-    'Amount'
-  ];
-
-
-  const data =
-    rows
-      .sort(
-        (a,b) =>
-          (a.date||'')
-            .localeCompare(
-              b.date||''
-            )
-      )
-      .map(
-        e => [
-
-          e.date,
-          e.accountHolder,
-          e.bankAccountNo,
-          e.purpose,
-          e.category,
-          e.subCategory,
-          e.person,
-          e.subType,
-          e.branch,
-          e.ifsc,
-          e.amount
-
-        ]
-      );
-
-
+function renderMonthlyTotals(){
+  const el = document.getElementById('monthlyTotalsList');
   const totals = {};
 
-  rows.forEach(
-    e => {
+  DATA.entries.forEach(e => {
+    const month = e.date ? String(e.date).slice(0,7) : '';
+    if(!/^\d{4}-\d{2}$/.test(month)) return;
+    totals[month] = (totals[month] || 0) + Number(e.amount || 0);
+  });
 
-      totals[e.person] =
-        (totals[e.person] || 0)
-        +
-        Number(
-          e.amount || 0
-        );
+  const months = Object.keys(totals).sort((a,b) => b.localeCompare(a));
 
+  if(!months.length){
+    el.innerHTML = '<div class="empty">No payment data available</div>';
+    return;
+  }
+
+  el.innerHTML = months.map(month => {
+    const [year, monthNo] = month.split('-');
+    const label = new Date(Number(year), Number(monthNo)-1, 1)
+      .toLocaleDateString('en-IN', {month:'long', year:'numeric'});
+    const selected = month === document.getElementById('monthPicker').value;
+
+    return `
+      <div class="monthly-total-row ${selected ? 'selected' : ''}" onclick="selectDashboardMonth('${month}')">
+        <span>${label}</span>
+        <strong>₹${formatMoney(totals[month])}</strong>
+      </div>
+    `;
+  }).join('');
+}
+
+function selectDashboardMonth(month){
+  document.getElementById('monthPicker').value = month;
+  renderDashboard();
+}
+
+function renderDashboard(){
+  const month = document.getElementById('monthPicker').value;
+  const monthEntries = getMonthEntries(month);
+
+  const total = monthEntries.reduce((s,e) => s + Number(e.amount || 0), 0);
+  const peopleWithPayments = new Set(monthEntries.map(e => e.person).filter(Boolean)).size;
+
+  document.getElementById('monthSummary').innerHTML = `
+    <div class="summary-box">
+      <div class="label">TOTAL PAID</div>
+      <div class="value">₹${formatMoney(total)}</div>
+    </div>
+    <div class="summary-box">
+      <div class="label">MARKETING PERSONS PAID</div>
+      <div class="value">${peopleWithPayments}</div>
+    </div>
+  `;
+
+  renderMonthlyTotals();
+
+  const el = document.getElementById('dashboardList');
+
+  if(!DATA.people.length){
+    el.innerHTML = '<div class="empty">Add marketing persons in Admin first</div>';
+    return;
+  }
+
+  el.innerHTML = DATA.people.map(person => {
+    const list = monthEntries.filter(e => e.person === person);
+    const used = list.reduce((s,e) => s + Number(e.amount || 0), 0);
+
+    return `
+      <div class="person-row clickable" onclick="openDetail('${escapeJs(person)}')">
+        <div class="row">
+          <span class="person-name">${escapeHtml(person)}</span>
+          <span style="font-size:13px;color:var(--muted)">
+            ${list.length} payment${list.length === 1 ? '' : 's'}
+          </span>
+        </div>
+        <div class="stats">
+          <span>Given / Spent</span>
+          <span><b>₹${formatMoney(used)}</b></span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Also show entries for people who were removed later, so historical data
+  // is not silently hidden.
+  const currentNames = new Set(DATA.people);
+  const historicalPeople = [...new Set(monthEntries.map(e => e.person).filter(Boolean))]
+    .filter(p => !currentNames.has(p));
+
+  if(historicalPeople.length){
+    el.innerHTML += `
+      <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);">
+        Historical / removed persons
+      </div>
+      ${historicalPeople.map(person => {
+        const used = monthEntries
+          .filter(e => e.person === person)
+          .reduce((s,e) => s + Number(e.amount || 0), 0);
+
+        return `
+          <div class="person-row clickable" onclick="openDetail('${escapeJs(person)}')">
+            <div class="row">
+              <span class="person-name">${escapeHtml(person)}</span>
+              <span style="font-size:13px;color:var(--muted)">Removed</span>
+            </div>
+            <div class="stats">
+              <span>Given / Spent</span>
+              <span><b>₹${formatMoney(used)}</b></span>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    `;
+  }
+}
+
+function formatMoney(value){
+  return Number(value || 0).toLocaleString('en-IN', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2
+  });
+}
+
+function escapeJs(value){
+  return String(value ?? '').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+}
+
+function openDetail(person){
+  const month = document.getElementById('monthPicker').value;
+
+  const list = DATA.entries
+    .filter(e => e.person === person && e.date && e.date.slice(0,7) === month)
+    .sort((a,b) => (b.date || '').localeCompare(a.date || ''));
+
+  const used = list.reduce((s,e) => s + Number(e.amount || 0), 0);
+
+  document.getElementById('detailName').textContent = person;
+  document.getElementById('detailSummary').textContent =
+    `${month} · ${list.length} payment${list.length === 1 ? '' : 's'} · Total ₹${formatMoney(used)}`;
+
+  document.getElementById('detailEntries').innerHTML = list.length ? list.map(e => `
+    <div class="detail-item">
+      <div class="row">
+        <span>${escapeHtml(e.date)}</span>
+        <span>₹${formatMoney(e.amount)}</span>
+      </div>
+      <div class="purpose">
+        ${escapeHtml(e.purpose || 'No purpose noted')}
+      </div>
+      <div class="bank">
+        ${escapeHtml(e.accountHolder)} · A/C ${escapeHtml(e.bankAccountNo)} · ${escapeHtml(e.ifscCode)}
+        <br>
+        ${escapeHtml(e.category)} / ${escapeHtml(e.subCategory)}
+        · ${escapeHtml(e.subType)} · ${escapeHtml(e.branch)}
+      </div>
+    </div>
+  `).join('') : '<div class="empty">No payments for this person this month</div>';
+
+  document.getElementById('detailOverlay').classList.add('show');
+}
+
+function closeDetail(){
+  document.getElementById('detailOverlay').classList.remove('show');
+}
+
+function renderRecentEntries(){
+  const el = document.getElementById('recentEntries');
+
+  const list = [...DATA.entries]
+    .sort((a,b) => (b.date || '').localeCompare(a.date || ''))
+    .slice(0,10);
+
+  el.innerHTML = list.length ? list.map(e => `
+    <div class="list-item">
+      <span>
+        ${escapeHtml(e.date)} · ${escapeHtml(e.person)}
+        <div class="meta">
+          ${escapeHtml(e.purpose || '—')} · ${escapeHtml(e.branch || '—')}
+        </div>
+      </span>
+      <span>₹${formatMoney(e.amount)}</span>
+    </div>
+  `).join('') : '<div class="empty">No payments yet</div>';
+}
+
+function renderAdminLists(){
+  renderSimpleList('peopleList', DATA.people, removePerson, 'No marketing persons');
+}
+
+function renderSimpleList(id, values, removeFn, emptyText){
+  const el = document.getElementById(id);
+
+  if(!values.length){
+    el.innerHTML = `<div class="empty">${emptyText}</div>`;
+    return;
+  }
+
+  el.innerHTML = values.map(v => `
+    <div class="person-row row">
+      <span>${escapeHtml(v)}</span>
+      <button class="remove-x" onclick="window.${removeFn.name}('${escapeJs(v)}')">Remove</button>
+    </div>
+  `).join('');
+}
+
+async function submitEntry(){
+  const params = {
+    date: document.getElementById('entryDate').value,
+    person: document.getElementById('entryPerson').value,
+    accountHolder: document.getElementById('entryAccountHolder').value.trim(),
+    bankAccountNo: document.getElementById('entryBankAccountNo').value.trim(),
+    ifscCode: document.getElementById('entryIfscCode').value.trim(),
+    amount: document.getElementById('entryAmount').value,
+    purpose: document.getElementById('entryPurpose').value.trim(),
+    category: document.getElementById('entryCategory').value.trim(),
+    subCategory: document.getElementById('entrySubCategory').value.trim(),
+    subType: document.getElementById('entrySubType').value,
+    branch: document.getElementById('entryBranch').value
+  };
+
+  const required = [
+    ['date', 'Date of payment'],
+    ['person', 'Marketing person'],
+    ['accountHolder', 'Account holder'],
+    ['bankAccountNo', 'Bank account number'],
+    ['ifscCode', 'IFSC code'],
+    ['amount', 'Amount'],
+    ['purpose', 'Purpose'],
+    ['category', 'Category'],
+    ['subCategory', 'Sub category'],
+    ['subType', 'Sub type'],
+    ['branch', 'Branch']
+  ];
+
+  for(const [key,label] of required){
+    if(!params[key]){
+      toast(`Fill: ${label}`);
+      return;
+    }
+  }
+
+  try{
+    await api('addEntry', params);
+
+    document.getElementById('entryAmount').value = '';
+    document.getElementById('entryPurpose').value = '';
+    document.getElementById('entryCategory').value = '';
+    document.getElementById('entrySubCategory').value = '';
+
+    toast('Payment saved');
+    await loadData();
+  }catch(e){
+    toast(e.message);
+  }
+}
+
+async function submitAddPerson(){
+  await addAdminValue('newPersonName', 'addPerson', 'Person added');
+}
+
+
+async function addAdminValue(inputId, action, successMessage){
+  const input = document.getElementById(inputId);
+  const name = input.value.trim();
+
+  if(!name){
+    toast('Enter a name');
+    return;
+  }
+
+  try{
+    await api(action, {name});
+    input.value = '';
+    toast(successMessage);
+    await loadData();
+  }catch(e){
+    toast(e.message);
+  }
+}
+
+let confirmAction = null;
+
+function askConfirm(message, onYes){
+  document.getElementById('confirmMessage').textContent = message;
+  confirmAction = onYes;
+  document.getElementById('confirmOverlay').classList.add('show');
+}
+
+function closeConfirm(){
+  document.getElementById('confirmOverlay').classList.remove('show');
+  confirmAction = null;
+}
+
+async function acceptConfirm(){
+  const action = confirmAction;
+  closeConfirm();
+  if(action){
+    try{
+      await action();
+    }catch(e){
+      toast(e.message);
+    }
+  }
+}
+
+function removePerson(name){
+  askConfirm(
+    `Remove "${name}" from the marketing-person dropdown? Existing payments remain in the sheet.`,
+    async () => {
+      await api('removePerson', {name});
+      toast('Person removed');
+      await loadData();
     }
   );
-
-
-  const grandTotal =
-    Object.values(
-      totals
-    ).reduce(
-      (a,b) =>
-        a+b,
-      0
-    );
-
-
-  const summaryRows =
-    Object.keys(
-      totals
-    )
-    .sort()
-    .map(
-      p => [
-        p,
-        totals[p]
-      ]
-    );
-
-
-  summaryRows.push(
-    [
-      'TOTAL',
-      grandTotal
-    ]
-  );
-
-
-  const summarySheet =
-    XLSX.utils.aoa_to_sheet(
-      [
-        [
-          'Person',
-          'Total Amount'
-        ],
-        ...summaryRows
-      ]
-    );
-
-
-  const sheet =
-    XLSX.utils.aoa_to_sheet(
-      [
-        header,
-        ...data
-      ]
-    );
-
-
-  const wb =
-    XLSX.utils.book_new();
-
-
-  XLSX.utils.book_append_sheet(
-    wb,
-    summarySheet,
-    'Summary'
-  );
-
-
-  XLSX.utils.book_append_sheet(
-    wb,
-    sheet,
-    month
-  );
-
-
-  XLSX.writeFile(
-    wb,
-    `Marketing_Spend_${month}.xlsx`
-  );
-
 }
 
 
-/* =====================================================
-   MONTH CHANGE
-   ===================================================== */
-
-document
-  .getElementById(
-    'monthPicker'
-  )
-  .addEventListener(
-    'change',
-    renderDashboard
-  );
-
-
-/* =====================================================
-   INITIAL LOAD
-   ===================================================== */
+document.getElementById('monthPicker').addEventListener('change', renderDashboard);
 
 if(isSessionValid()){
-
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appWrap').style.display = 'block';
   loadData();
-
 }
-
 </script>
-
 </body>
 </html>
